@@ -2,295 +2,328 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Truth or Dare: Custom Premium Edition</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Truth or Dare: Premium Standalone Arena</title>
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons for High-fidelity UI -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap');
-    body { font-family: 'Outfit', sans-serif; overflow: hidden; }
-    .font-display { font-family: 'Space Grotesk', sans-serif; }
-    .glass { background: rgba(8, 6, 16, 0.72); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.07); }
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-thumb { background: rgba(168, 85, 247, 0.4); border-radius: 99px; }
-    .ambient-grad { transition: background 1s ease-in-out; }
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;700;900&display=swap');
+    
+    body {
+      font-family: 'Outfit', sans-serif;
+      overflow: hidden;
+      background-color: #030712;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    .font-display {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    /* Premium visual effects */
+    .neon-glow-cyan {
+      text-shadow: 0 0 10px rgba(34, 211, 238, 0.9), 0 0 25px rgba(34, 211, 238, 0.45);
+    }
+    .neon-glow-rose {
+      text-shadow: 0 0 10px rgba(244, 63, 94, 0.9), 0 0 25px rgba(244, 63, 94, 0.45);
+    }
+    .neon-glow-amber {
+      text-shadow: 0 0 10px rgba(245, 158, 11, 0.9), 0 0 25px rgba(245, 158, 11, 0.45);
+    }
+    .neon-glow-purple {
+      text-shadow: 0 0 10px rgba(168, 85, 247, 0.9), 0 0 25px rgba(168, 85, 247, 0.45);
+    }
+    .neon-glow-fuchsia {
+      text-shadow: 0 0 10px rgba(217, 70, 239, 0.9), 0 0 25px rgba(217, 70, 239, 0.45);
+    }
+    .neon-glow-red {
+      text-shadow: 0 0 12px rgba(239, 68, 68, 0.95), 0 0 30px rgba(239, 68, 68, 0.5);
+    }
+
+    /* Premium glassmorphic container style */
+    .glass {
+      background: rgba(10, 8, 20, 0.76);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.82);
+    }
+
+    .ambient-grad {
+      transition: background 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Hardware-accelerated visual routing transition */
+    @keyframes popScale {
+      0% { transform: scale(1); filter: brightness(1); }
+      40% { transform: scale(0.95); filter: brightness(1.8); }
+      100% { transform: scale(1); filter: brightness(1); }
+    }
+    .animate-pop-scale {
+      animation: popScale 0.15s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+    }
+
+    /* Celebration effect for target landing */
     @keyframes targetLand {
-      0% { transform: translate(-50%, -50%) scale(1); }
-      50% { transform: translate(-50%, -50%) scale(1.35) rotate(-5deg); filter: brightness(1.5); }
-      100% { transform: translate(-50%, -50%) scale(1.2) rotate(0deg); }
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.7); }
+      50% { transform: scale(1.3); box-shadow: 0 0 20px 10px rgba(34, 211, 238, 0); }
+      100% { transform: scale(1.15); box-shadow: 0 0 12px 2px rgba(34, 211, 238, 0.3); }
     }
-    .animate-target { animation: targetLand 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-    @keyframes floating {
-      0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
-      50% { transform: translateY(-10px) scale(1.1); opacity: 0.6; }
+    .animate-target-land {
+      animation: targetLand 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
-    .animate-float { animation: floating 6s ease-in-out infinite; }
+
+    @keyframes subtleFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-5px) rotate(0.4deg); }
+    }
+    .animate-float {
+      animation: subtleFloat 5s ease-in-out infinite alternate;
+    }
+
+    /* Hide standard scrollbars yet preserve scrolling features */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none; /* IE/Edge */
+      scrollbar-width: none; /* Firefox */
+    }
   </style>
 </head>
-<body class="w-screen h-[100dvh] flex flex-col justify-between items-center relative overflow-hidden bg-gradient-to-b from-[#061d24] via-[#004e64] to-[#124e3f] p-3 text-slate-150 ambient-grad">
+<body id="dynamicBody" class="w-full max-w-full h-[100dvh] min-h-[100dvh] flex flex-col justify-between items-center relative overflow-hidden bg-gradient-to-b from-[#061d24] via-[#004e64] to-[#124e3f] p-3 text-slate-100 selection:bg-cyan-500 selection:text-white ambient-grad">
 
-  <div id="ambientOverlay" class="absolute inset-0 bg-transparent opacity-30 pointer-events-none z-0"></div>
-  <div id="glow1" class="absolute w-72 h-72 rounded-full blur-[100px] top-[10%] left-[-15%] pointer-events-none bg-cyan-500/10 transition-colors duration-1000"></div>
-  <div id="glow2" class="absolute w-80 h-80 rounded-full blur-[120px] bottom-[10%] right-[-15%] pointer-events-none bg-fuchsia-600/10 transition-colors duration-1000"></div>
+  <!-- DYNAMIC AMBIENT BACKDROP PARTICLES -->
+  <div id="ambientOverlay" class="absolute inset-0 bg-transparent opacity-30 transition-all duration-1000 ease-in-out pointer-events-none z-0"></div>
+  <div id="ambientGlow1" class="absolute w-[300px] h-[300px] bg-cyan-600/10 rounded-full blur-[100px] top-[10%] left-[-15%] pointer-events-none transition-all duration-1000"></div>
+  <div id="ambientGlow2" class="absolute w-[340px] h-[340px] bg-fuchsia-600/10 rounded-full blur-[120px] bottom-[10%] right-[-15%] pointer-events-none transition-all duration-1000" style="animation-delay: 2s;"></div>
 
-  <!-- HEADER -->
-  <header class="w-full max-w-sm mx-auto z-10 flex flex-col items-center select-none text-center pt-4 flex-shrink-0 animate-fade-in">
-    <div class="relative flex flex-col items-center gap-1 px-5 py-2">
-      <h1 class="text-4xl sm:text-5xl font-black tracking-tighter uppercase flex items-center justify-center font-display leading-none">
-        <span id="title-truth" class="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-indigo-300">TRUTH</span>
-        <span class="mx-1.5 text-[8px] font-mono font-black border rounded px-1 py-0.5 bg-white/5 border-white/10 text-slate-400">OR</span>
-        <span id="title-dare" class="bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-400 to-rose-300">DARE</span>
+  <!-- 1. HEADER & UI FIX: Adjusted vertically (pt-10) with massive bold styling & neon elements -->
+  <header class="w-full max-w-md mx-auto z-10 flex flex-col items-center select-none text-center pt-10 pb-1 flex-shrink-0 animate-float">
+    <div class="relative flex flex-col items-center gap-1">
+      <div id="titleGlow" class="absolute inset-0 w-40 h-16 mx-auto rounded-full blur-[26px] pointer-events-none opacity-40 bg-cyan-500/15 transition-colors duration-1000"></div>
+      
+      <h1 id="titleHeading" class="text-4xl sm:text-5xl font-extrabold tracking-[-0.04em] uppercase flex items-center justify-center font-display leading-none select-none transition-all duration-700 neon-glow-cyan">
+        <span id="titleTruth" class="transition-all duration-700 text-cyan-400">TRUTH</span>
+        <span id="titleOr" class="mx-2 text-[10px] font-mono font-black italic tracking-wider border border-white/10 rounded-md px-1.5 py-0.5 bg-white/5 text-slate-400 align-middle">OR</span>
+        <span id="titleDare" class="transition-all duration-700 text-fuchsia-400">DARE</span>
       </h1>
-      <div id="title-divider" class="h-[2px] w-12 rounded-full mt-1.5 bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-cyan-400"></div>
+      <div id="titleLine" class="h-[3px] w-16 rounded-full mt-2 transition-all duration-700 bg-gradient-to-r from-cyan-400 to-fuchsia-400 shadow-[0_0_10px_rgba(34,211,238,0.7)]"></div>
     </div>
 
-    <div class="mt-2 flex items-center justify-center gap-1.5 flex-wrap">
-      <div id="header-accent-badge" class="px-2.5 py-0.5 bg-cyan-500/10 border border-cyan-400 text-cyan-300 rounded-full text-[8px] font-bold tracking-wider uppercase">
-        Vortex of Truths &amp; Trials
+    <!-- Active Soundtrack Toggle Indicator -->
+    <div class="mt-2.5 flex items-center justify-center gap-2 flex-wrap">
+      <div id="headerBadge" class="inline-flex items-center gap-1.5 px-3 py-0.5 bg-cyan-500/10 border border-cyan-400 text-cyan-300 rounded-full text-[8px] font-black tracking-widest uppercase shadow-inner transition-all duration-500">
+        Premium Party Arena
       </div>
-      <button onclick="toggleMute()" id="mute-btn" class="p-1 px-2.5 rounded-full border border-white/10 bg-white/5 text-slate-300 text-[8px] font-bold tracking-wider flex items-center gap-1 cursor-pointer">
-        <i id="mute-icon" class="fa-solid fa-volume-high"></i>
-        <span id="mute-text">SOUNDS</span>
+      <button onclick="toggleSoundtracks()" id="soundToggleBtn" class="p-1 px-3 rounded-full border border-white/10 bg-white/5 text-slate-300 hover:bg-white/15 text-[8px] font-black tracking-wide flex items-center gap-1.5 transition-all pointer-events-auto cursor-pointer" title="Toggle audio synthesizer effects">
+        <i id="soundIcon" class="fa-solid fa-volume-high text-cyan-400"></i>
+        <span>SOUNDS: ON</span>
       </button>
     </div>
-    <p id="deck-tagline" class="text-[9.5px] text-slate-400 font-bold tracking-wider uppercase mt-1.5 opacity-90"></p>
   </header>
 
-  <!-- SPA GAME CARD -->
-  <main class="w-full max-w-sm mx-auto my-2 flex-grow flex items-center justify-center z-10 overflow-hidden">
-    <div id="gameContainer" class="w-full h-full glass rounded-[24px] p-4 relative overflow-hidden flex flex-col justify-between shadow-2xl">
+  <!-- MAIN ADAPTIVE GAME VIEWPORT -->
+  <main class="w-full max-w-md mx-auto my-1.5 flex-grow flex items-center justify-center z-10 overflow-hidden px-1">
+    <div id="gameContainer" class="w-full h-full max-h-[520px] glass rounded-[26px] p-4 relative overflow-hidden flex flex-col justify-between shadow-2xl transition-all duration-300">
       
-      <!-- SCREEN 1: LOBBY & DECK CONFIG -->
-      <section id="screen-setup" class="flex flex-col h-full justify-between overflow-hidden">
-        <div class="flex-grow overflow-y-auto space-y-4 pr-1">
-          <!-- Players input module -->
+      <!-- SCREEN 1: LOBBY REGISTRATION & DECK CHOOOSERS -->
+      <section id="screen-lobby" class="flex flex-col h-full justify-between overflow-hidden">
+        <div class="flex-grow overflow-y-auto space-y-4 pr-1 no-scrollbar">
+          
+          <!-- 2. PLAYER LOBBY EMORJI ENGINE -->
           <div class="flex flex-col gap-1.5">
-            <label class="text-[10px] font-black tracking-wider text-slate-400 uppercase flex justify-between">
-              <span>Lobby Guest List <span id="player-count" class="text-[10px] text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-full font-mono">4</span></span>
-              <span class="text-[8px] text-slate-500 font-normal lowercase">(require >= 2)</span>
+            <label class="text-[10.5px] font-black tracking-wider text-slate-400 flex items-center justify-between uppercase">
+              <span>PARTY GUESTS COUNT <span id="lobby-count" class="text-xs text-cyan-400 bg-cyan-500/10 px-2.5 py-0.5 rounded-full ml-1 font-mono font-bold">4</span></span>
+              <span class="text-[8.5px] font-bold text-slate-500 lowercase">(REQUIRS ≥ 2)</span>
             </label>
-            <div class="flex gap-1.5">
-              <div id="emoji-preview" class="flex items-center justify-center text-base bg-white/5 border border-white/10 w-9 h-9 rounded-xl select-none">🦊</div>
-              <input type="text" id="player-input" placeholder="Guest name..." class="flex-grow bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:border-cyan-500 text-white">
-              <button onclick="addPlayer()" class="bg-cyan-600 hover:bg-cyan-500 text-white px-3.5 rounded-xl active:scale-95 cursor-pointer">
-                <i class="fa-solid fa-plus"></i>
+            
+            <div class="flex gap-2">
+              <div id="selected-emoji-display" class="flex items-center justify-center text-xl bg-white/5 border border-white/10 w-11 h-11 rounded-xl select-none shadow-inner">🦊</div>
+              <input type="text" id="player-input-box" placeholder="Enter guest name..." class="flex-grow bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-xs font-semibold focus:outline-none focus:border-cyan-500 transition-colors placeholder:text-slate-500 text-white">
+              <button onclick="addNewPlayer()" class="bg-cyan-600 hover:bg-cyan-500 text-white w-11 h-11 rounded-xl transition-all flex items-center justify-center shadow-lg active:scale-95 cursor-pointer">
+                <i class="fa-solid fa-plus text-sm"></i>
               </button>
             </div>
-            <!-- Interactive swift emoji selector bar -->
-            <div id="emoji-row" class="flex gap-1 overflow-x-auto pb-1" style="scrollbar-width: none;"></div>
-            <!-- Current guest list -->
-            <div id="tags-box" class="flex flex-wrap gap-1 max-h-[60px] overflow-y-auto mt-1"></div>
+
+            <!-- Scrollable Emoji Slider Selectors -->
+            <div class="overflow-x-auto no-scrollbar select-none mt-1">
+              <div id="emoji-selectors-slider" class="flex gap-2 pb-1">
+                <!-- Populated dynamically: 🦊, 🐼, 🐨, 🐯, 🦁, 🐸, 🐙, 🦄, 🦖 etc. -->
+              </div>
+            </div>
+
+            <!-- Active registered listing -->
+            <div class="max-h-[70px] overflow-y-auto mt-1 mx-0.5 pr-0.5 no-scrollbar">
+              <div id="avatar-bubbles-wrapper" class="flex flex-wrap gap-2">
+                <!-- Guest listing -->
+              </div>
+            </div>
           </div>
 
-          <!-- Decks Grid -->
-          <div class="flex flex-col gap-1.5">
-            <label class="text-[10px] font-black tracking-wider text-slate-400 uppercase">Categories</label>
+          <!-- DYNAMIC GAME DECK CATEGORIES SELECTION -->
+          <div class="flex flex-col gap-1.5 border-t border-white/5 pt-3">
+            <label class="text-[10.5px] font-black tracking-wider text-slate-400 uppercase">SELECT ACTIVE PLAYING DECK</label>
+            
             <div class="grid grid-cols-2 gap-2">
-              <div id="deck-friends" onclick="selectDeck('friends')" class="p-2 rounded-xl border border-cyan-400 bg-cyan-950/20 cursor-pointer select-none">
-                <div class="flex justify-between items-center text-xs">
-                  <span class="text-cyan-400"><i class="fa-solid fa-users"></i></span>
-                  <span class="chk text-cyan-400"><i class="fa-solid fa-circle-check"></i></span>
-                </div>
-                <h3 class="text-[11px] font-black uppercase text-slate-205 mt-1">Friends</h3>
-                <p class="text-[8.5px] text-slate-500 leading-none">Party secrets &amp; laughs</p>
-              </div>
+              <!-- Friends -->
+              <button id="deck-btn-friends" onclick="changeCurrentDeck('friends')" class="p-2.5 rounded-xl border border-cyan-400 bg-cyan-950/20 text-slate-100 flex items-center justify-between text-[11px] font-bold text-left transition-all cursor-pointer">
+                <span class="flex items-center gap-1.5 truncate"><span class="text-xs">🎉</span> Friends</span>
+                <i class="fa-solid fa-circle-check text-cyan-400 text-[10px]" id="deck-icon-friends"></i>
+              </button>
+              
+              <!-- Couples -->
+              <button id="deck-btn-couples" onclick="changeCurrentDeck('couples')" class="p-2.5 rounded-xl border border-white/5 bg-white/5 text-slate-400 flex items-center justify-between text-[11px] font-bold text-left transition-all hover:text-rose-400 cursor-pointer">
+                <span class="flex items-center gap-1.5 truncate"><span class="text-xs">👩‍❤️‍👨</span> Lovers/Partners</span>
+                <i class="fa-regular fa-circle text-slate-600 text-[10px]" id="deck-icon-couples"></i>
+              </button>
 
-              <div id="deck-couples" onclick="selectDeck('couples')" class="p-2 rounded-xl border border-white/5 bg-white/5 cursor-pointer select-none">
-                <div class="flex justify-between items-center text-xs">
-                  <span class="text-rose-400"><i class="fa-solid fa-heart"></i></span>
-                  <span class="chk text-slate-600"><i class="fa-regular fa-circle"></i></span>
-                </div>
-                <h3 class="text-[11px] font-black uppercase text-slate-205 mt-1">Couples</h3>
-                <p class="text-[8.5px] text-slate-500 leading-none">Romantic &amp; deep intimacy</p>
-              </div>
+              <!-- Family -->
+              <button id="deck-btn-family" onclick="changeCurrentDeck('family')" class="p-2.5 rounded-xl border border-white/5 bg-white/5 text-slate-400 flex items-center justify-between text-[11px] font-bold text-left transition-all hover:text-amber-400 cursor-pointer">
+                <span class="flex items-center gap-1.5 truncate"><span class="text-xs">🧸</span> Family</span>
+                <i class="fa-regular fa-circle text-slate-600 text-[10px]" id="deck-icon-family"></i>
+              </button>
 
-              <div id="deck-family" onclick="selectDeck('family')" class="p-2 rounded-xl border border-white/5 bg-white/5 cursor-pointer select-none">
-                <div class="flex justify-between items-center text-xs">
-                  <span class="text-amber-400"><i class="fa-solid fa-house"></i></span>
-                  <span class="chk text-slate-600"><i class="fa-regular fa-circle"></i></span>
-                </div>
-                <h3 class="text-[11px] font-black uppercase text-slate-205 mt-1">Family</h3>
-                <p class="text-[8.5px] text-slate-500 leading-none">Wholesome &amp; safe fun</p>
-              </div>
+              <!-- Deep Minds -->
+              <button id="deck-btn-deep" onclick="changeCurrentDeck('deep')" class="p-2.5 rounded-xl border border-white/5 bg-white/5 text-slate-400 flex items-center justify-between text-[11px] font-bold text-left transition-all hover:text-purple-400 cursor-pointer">
+                <span class="flex items-center gap-1.5 truncate"><span class="text-xs">🧠</span> Deep Minds</span>
+                <i class="fa-regular fa-circle text-slate-600 text-[10px]" id="deck-icon-deep"></i>
+              </button>
 
-              <div id="deck-deep" onclick="selectDeck('deep')" class="p-2 rounded-xl border border-white/5 bg-white/5 cursor-pointer select-none">
-                <div class="flex justify-between items-center text-xs">
-                  <span class="text-purple-400"><i class="fa-solid fa-brain"></i></span>
-                  <span class="chk text-slate-600"><i class="fa-regular fa-circle"></i></span>
-                </div>
-                <h3 class="text-[11px] font-black uppercase text-slate-205 mt-1">Deep</h3>
-                <p class="text-[8.5px] text-slate-500 leading-none">Mind &amp; soul games</p>
-              </div>
+              <!-- Extreme -->
+              <button id="deck-btn-extreme" onclick="changeCurrentDeck('extreme')" class="p-2.5 rounded-xl border border-white/5 bg-white/5 text-slate-400 flex items-center justify-between text-[11px] font-bold text-left transition-all hover:text-fuchsia-400 cursor-pointer">
+                <span class="flex items-center gap-1.5 truncate"><span class="text-xs">💥</span> Extreme</span>
+                <i class="fa-regular fa-circle text-slate-600 text-[10px]" id="deck-icon-extreme"></i>
+              </button>
 
-              <div id="deck-extreme" onclick="selectDeck('extreme')" class="p-2 rounded-xl border border-white/5 bg-white/5 cursor-pointer select-none">
-                <div class="flex justify-between items-center text-xs">
-                  <span class="text-fuchsia-400"><i class="fa-solid fa-bolt"></i></span>
-                  <span class="chk text-slate-600"><i class="fa-regular fa-circle"></i></span>
-                </div>
-                <h3 class="text-[11px] font-black uppercase text-slate-205 mt-1">Extreme</h3>
-                <p class="text-[8.5px] text-slate-500 leading-none">Bold action dares</p>
-              </div>
-
-              <div id="deck-dark" onclick="selectDeck('dark')" class="p-2 rounded-xl border border-white/5 bg-white/5 cursor-pointer select-none">
-                <div class="flex justify-between items-center text-xs">
-                  <span class="text-red-500"><i class="fa-solid fa-skull"></i></span>
-                  <span class="chk text-slate-600"><i class="fa-regular fa-circle"></i></span>
-                </div>
-                <h3 class="text-[11px] font-black uppercase text-slate-205 mt-1">Dark &amp; Bold</h3>
-                <p class="text-[8.5px] text-slate-500 leading-none">Adult psychological truth</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Custom Deck Switch -->
-          <div id="deck-custom" onclick="selectDeck('custom')" class="p-2.5 rounded-xl border border-white/5 bg-white/5 cursor-pointer select-none">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <i class="fa-solid fa-sliders text-emerald-400"></i>
-                <div>
-                  <h4 class="text-[11px] font-black uppercase text-emerald-300">Custom Forge Mode</h4>
-                  <p class="text-[8.5px] text-slate-400">Mix databases or write custom inputs</p>
-                </div>
-              </div>
-              <div id="custom-chk" class="w-4 h-4 rounded-full border border-slate-600 flex items-center justify-center text-[8px]"></div>
-            </div>
-
-            <!-- Custom Drawer -->
-            <div id="custom-editor" class="hidden mt-2 pt-2 border-t border-emerald-500/10 flex flex-col gap-2" onclick="event.stopPropagation()">
-              <span class="text-[8px] font-bold uppercase text-slate-400">Selected Blend sources:</span>
-              <div class="flex flex-wrap gap-1">
-                <button id="blend-friends" onclick="toggleCustomBlend('friends')" class="px-1.5 py-0.5 rounded text-[8px] font-bold border border-emerald-400 bg-emerald-500/10 text-emerald-300">Friends</button>
-                <button id="blend-couples" onclick="toggleCustomBlend('couples')" class="px-1.5 py-0.5 rounded text-[8px] font-bold border border-emerald-400 bg-emerald-500/10 text-emerald-300">Couples</button>
-                <button id="blend-dark" onclick="toggleCustomBlend('dark')" class="px-1.5 py-0.5 rounded text-[8px] font-bold border border-white/10 text-slate-400">Dark &amp; Bold</button>
-              </div>
-              <div class="flex gap-1 items-center mt-1">
-                <input type="text" id="custom-q-text" placeholder="Type customized prompt card..." class="flex-grow bg-black/40 border border-emerald-500/20 rounded px-2.5 py-1 text-[10px] text-white focus:outline-none">
-                <select id="custom-q-type" class="bg-black/40 border border-emerald-500/20 text-emerald-300 font-bold p-1 text-[10px] rounded">
-                  <option value="truth">TRUTH</option>
-                  <option value="dare">DARE</option>
-                </select>
-                <button onclick="addCustomQuestion()" class="bg-emerald-600 text-white font-bold px-2 py-1 text-[10px] rounded hover:bg-emerald-500">+</button>
-              </div>
-              <div id="custom-q-list" class="max-h-[50px] overflow-y-auto space-y-1"></div>
+              <!-- Dark & Bold -->
+              <button id="deck-btn-dark" onclick="changeCurrentDeck('dark')" class="p-2.5 rounded-xl border border-white/5 bg-white/5 text-slate-400 flex items-center justify-between text-[11px] font-bold text-left transition-all hover:border-red-650/40 hover:text-red-400 cursor-pointer">
+                <span class="flex items-center gap-1.5 truncate"><span class="text-xs">💀</span> Dark & Bold</span>
+                <i class="fa-regular fa-circle text-slate-600 text-[10px]" id="deck-icon-dark"></i>
+              </button>
             </div>
           </div>
         </div>
 
-        <!-- Launch Panel -->
-        <div class="grid grid-cols-5 gap-2 mt-2 flex-shrink-0">
-          <button onclick="enterArena()" id="launch-btn" class="col-span-4 py-2.5 rounded-xl text-xs font-black tracking-widest text-white bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-600 hover:to-teal-700 active:scale-95 transition-all">
-            ENTER THE SPIN RING <i class="fa-solid fa-arrow-right ml-1"></i>
-          </button>
-          <button onclick="toggleShare(true)" class="bg-white/5 border border-white/10 rounded-xl flex items-center justify-center transition-colors hover:bg-white/10">
-            <i class="fa-solid fa-share-nodes text-xs text-cyan-300"></i>
-          </button>
-        </div>
-      </section>
-
-      <!-- SCREEN 2: THE SPIN ARENA -->
-      <section id="screen-arena" class="hidden flex-col items-center justify-between h-full w-full">
-        <div class="text-center w-full">
-          <h2 class="font-display text-[10px] font-black text-emerald-400 flex items-center justify-center gap-1.5 tracking-wider">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> BOTTLE ARENA
-          </h2>
-        </div>
-
-        <!-- ROTATIONAL RADIAL ARENA MAP -->
-        <div class="relative w-[280px] h-[280px] sm:w-[310px] sm:h-[310px] rounded-full bg-black/40 flex items-center justify-center border border-white/5 shadow-inner my-2">
-          <!-- Radial target track dots -->
-          <div id="radial-track" class="absolute inset-2 rounded-full border border-dashed border-cyan-500/10 pointer-events-none"></div>
-          
-          <!-- Radial Players Ring -->
-          <div id="radial-players" class="absolute inset-0 z-20 pointer-events-none"></div>
-
-          <!-- BOTTLE RENDER -->
-          <div id="bottle" class="absolute w-12 h-36 z-30 pointer-events-none origin-center transition-transform duration-[4.5s] ease-[cubic-bezier(0.12,0.85,0.18,1.01)]" style="transform: rotate(0deg);">
-            <svg class="w-full h-full drop-shadow-[0_0_12px_rgba(6,182,212,0.6)]" viewBox="0 0 100 300" fill="none">
-              <!-- Cap -->
-              <rect x="42" y="5" width="16" height="15" rx="3" fill="#06b6d4" />
-              <!-- Neck -->
-              <rect x="45" y="15" width="10" height="40" rx="1" fill="#e0f7fa" />
-              <!-- Body Transition -->
-              <path d="M45 55H55V80C55 90 48 98 38 98V115H62V98C52 98 45 90 45 55Z" fill="#0891b2" />
-              <!-- Glass Base Cylinder -->
-              <path d="M22 120H78C82 120 85 123 85 127V265C85 275 76 283 66 283H34C24 283 15 275 15 265V127C15 123 18 120 22 120Z" fill="url(#bottleGlassGrad)" />
-              <!-- Starburst Center Label -->
-              <rect x="25" y="155" width="50" height="65" rx="6" fill="rgba(255,255,255,0.05)" stroke="#34d399" stroke-width="2" />
-              <polygon points="50,165 53,175 63,175 55,181 58,191 50,185 42,191 45,181 37,175 47,175" fill="#34d399" />
-              <defs>
-                <linearGradient id="bottleGlassGrad" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#22d3ee" />
-                  <stop offset="60%" stop-color="#0891b2" />
-                  <stop offset="100%" stop-color="#0f766e" />
-                </linearGradient>
-              </defs>
-            </svg>
-          </div>
-          <!-- Target calibration dot -->
-          <div class="absolute top-[3px] w-2 h-2 rounded-full z-45 bg-amber-400 shadow-[0_0_8px_#fbbf24]"></div>
-        </div>
-
-        <div class="w-full space-y-2 flex-shrink-0">
-          <button id="spin-btn" onclick="spinBottle()" class="w-full py-3 rounded-xl font-bold text-xs tracking-widest text-white bg-gradient-to-r from-cyan-500 to-emerald-600 shadow-md active:scale-95 transition-all">
-            SPIN THE BOTTLE <i class="fa-solid fa-sync fa-spin ml-1 text-[10px]" style="animation-duration: 3s;"></i>
-          </button>
-          <button onclick="goToSetup()" class="w-full text-[9px] font-bold text-slate-500 hover:text-slate-350 tracking-wider">
-            <i class="fa-solid fa-sliders"></i> RE-CONFIG SETTINGS
-          </button>
-        </div>
-      </section>
-
-      <!-- SCREEN 3: DECISION ROOM -->
-      <section id="screen-choice" class="hidden flex-col items-center justify-around h-full text-center py-2">
-        <span class="px-2.5 py-0.5 bg-rose-500/10 border border-rose-500/30 text-rose-400 text-[8.5px] font-black rounded-full tracking-widest">DECIDE LUCK OR DESTINY</span>
-        <div>
-          <h2 id="turn-name" class="font-display text-2xl font-black text-white">Guest Turn</h2>
-          <p class="text-[9.5px] text-slate-400 tracking-wider uppercase mt-1">Concur your fate standard prompt:</p>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3 w-full">
-          <button onclick="chooseFate('truth')" class="p-4 bg-black/40 border border-cyan-400/20 hover:border-cyan-400 rounded-2xl flex flex-col items-center gap-2 transition-transform active:scale-95">
-            <span class="w-10 h-10 rounded-full bg-cyan-400/10 text-cyan-400 flex items-center justify-center text-sm"><i class="fa-solid fa-question"></i></span>
-            <span class="text-xs font-black text-cyan-400">TRUTH</span>
-          </button>
-          <button onclick="chooseFate('dare')" class="p-4 bg-black/40 border border-rose-400/20 hover:border-rose-400 rounded-2xl flex flex-col items-center gap-2 transition-transform active:scale-95">
-            <span class="w-10 h-10 rounded-full bg-rose-400/10 text-rose-400 flex items-center justify-center text-sm"><i class="fa-solid fa-fire"></i></span>
-            <span class="text-xs font-black text-rose-400">DARE</span>
-          </button>
-        </div>
-
-        <button onclick="returnToArena()" class="text-[9px] font-bold text-slate-500 tracking-widest uppercase">
-          <i class="fa-solid fa-rotate-left mr-1"></i> Avoid Spin
+        <button onclick="goToArenaLayout()" id="enter-arena-btn" class="w-full py-3.5 bg-cyan-600 hover:bg-cyan-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-xs tracking-widest uppercase rounded-xl shadow-lg mt-3 transition-colors flex items-center justify-center gap-2 cursor-pointer">
+          ENTER SPINNING ARENA <i class="fa-solid fa-circle-play text-sm"></i>
         </button>
       </section>
 
-      <!-- SCREEN 4: SHOW COMPLETED PROMPT CARD -->
-      <section id="screen-challenge" class="hidden flex-col justify-between h-full text-center">
-        <div class="flex justify-between items-center border-b border-white/5 pb-2">
-          <div class="flex items-center gap-1.5">
-            <span id="player-label" class="text-[9.5px] font-black border border-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-full text-cyan-300">Player</span>
-            <span class="text-[9px] text-slate-500 tracking-wide font-bold uppercase">trial</span>
+      <!-- SCREEN 2: 3. UPSCALED SPINNER ARENA -->
+      <section id="screen-arena" class="hidden flex-col h-full justify-between items-center overflow-hidden">
+        
+        <!-- Upscaled ring occupies up to 90% mobile width -->
+        <div id="radial-arena-track" class="relative w-[310px] h-[310px] sm:w-[335px] sm:h-[335px] w-[88vw] h-[88vw] max-w-[340px] max-h-[340px] aspect-square rounded-full border border-white/5 bg-black/45 flex items-center justify-center flex-shrink-0 my-1.5 shadow-[inset_0_4px_22px_rgba(0,0,0,0.65)] z-10 transition-all">
+          
+          <div class="absolute inset-3 rounded-full border border-dashed border-cyan-400/20 pointer-events-none"></div>
+
+          <!-- Participant node placement ring -->
+          <div id="arena-players-wrapper" class="absolute inset-0 z-20"></div>
+
+          <!-- Dynamic bottle element with SVG gradients update structure -->
+          <div id="bottle" class="absolute w-14 h-40 z-30 pointer-events-none origin-center" style="transform: rotate(0deg); transition: transform 0.6s cubic-bezier(0.1, 0.8, 0.2, 1);">
+            <!-- Custom Dynamic SVG Bottled Gradient Vector populated via Javascript -->
           </div>
-          <span id="challenge-type" class="text-[9px] font-black tracking-widest border border-white/10 px-2 rounded bg-white/5">TRUTH</span>
+
+          <!-- Top-center index pin anchor -->
+          <div class="absolute top-1 w-3 h-3 rounded-full z-40 bg-emerald-400 shadow-[0_0_12px_#34d399] pointer-events-none"></div>
         </div>
 
-        <div class="relative py-6 px-3 bg-black/40 border border-white/5 rounded-2xl flex items-center justify-center min-h-[140px] my-2">
-          <span class="absolute top-2 left-3 text-2xl text-white/5 font-serif font-bold">“</span>
-          <p id="challenge-text" class="font-display text-[12px] font-bold tracking-wide text-slate-100 px-3 leading-relaxed">Reading trial prompt...</p>
-          <span class="absolute bottom-2 right-3 text-2xl text-white/5 font-serif font-bold">”</span>
-        </div>
-
-        <div class="space-y-2">
-          <button onclick="endChallenge(true)" class="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-black text-xs tracking-widest rounded-xl hover:brightness-110 active:scale-95 transition-all">
-            COMPLETE CHALLENGE <i class="fa-solid fa-check ml-1"></i>
+        <div class="w-full flex flex-col gap-2 flex-shrink-0 z-10">
+          <button onclick="spinActiveWheel()" id="spin-btn" class="w-full py-4 rounded-xl font-bold text-xs tracking-widest text-white bg-gradient-to-r from-cyan-500 to-emerald-600 hover:from-cyan-600 hover:to-emerald-700 active:scale-[0.98] shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2 uppercase">
+            SPIN THE BOTTLE <i class="fa-solid fa-arrows-spin"></i>
           </button>
-          <div class="grid grid-cols-2 gap-2">
-            <button onclick="skipPrompt()" class="py-2.5 bg-white/5 border border-white/5 rounded-xl text-[9px] font-bold tracking-wider hover:bg-white/10 text-slate-200">
-              <i class="fa-solid fa-arrows-rotate mr-1"></i> swap card
+          
+          <button onclick="returnToLobbyConfig()" class="text-[9px] text-slate-500 hover:text-slate-300 font-extrabold uppercase tracking-widest text-center flex items-center justify-center gap-1 cursor-pointer transition-all pt-1">
+            <i class="fa-solid fa-arrow-left"></i> Manage Guests & Party Decks
+          </button>
+        </div>
+      </section>
+
+      <!-- SCREEN 3: DECISION DESTINY (TRUTH OR DARE PATH) -->
+      <section id="screen-destiny" class="hidden flex-col gap-3.5 items-center w-full h-full text-center py-2 justify-around">
+        <div class="px-3 py-0.5 bg-cyan-550/10 border border-emerald-500/25 text-emerald-400 text-[9px] font-black tracking-widest animate-pulse max-w-max uppercase rounded-full">
+          ⚡ DESTINY TARGET DECISION ⚡
+        </div>
+        
+        <div>
+          <h2 id="victim-title" class="font-display text-2.5xl sm:text-3xl font-black text-white tracking-tight leading-normal">Sophia's Turn!</h2>
+          <p class="text-[10px] text-slate-400 mt-1 uppercase tracking-wider font-bold">Choose your mode of discovery:</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 w-full">
+          <!-- Truth Path selection -->
+          <button onclick="launchTargetChallenge('truth')" class="bg-black/35 hover:bg-cyan-500/10 border border-white/5 hover:border-cyan-500/30 p-4 rounded-2xl flex flex-col items-center justify-center gap-2 transition-all hover:-translate-y-0.5 active:scale-95 group cursor-pointer text-center">
+            <div class="w-11 h-11 rounded-full bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 group-hover:scale-110 transition-transform shadow-[0_0_10px_rgba(6,182,212,0.15)] animate-pulse">
+              <i class="fa-solid fa-question text-lg"></i>
+            </div>
+            <div>
+              <span class="block text-xs font-black tracking-widest text-cyan-400 font-display">TRUTH</span>
+              <span class="text-[8px] text-slate-500 mt-0.5 block tracking-wider uppercase font-extrabold">Confess Secret</span>
+            </div>
+          </button>
+
+          <!-- Dare Path selection -->
+          <button onclick="launchTargetChallenge('dare')" class="bg-black/35 hover:bg-rose-500/10 border border-white/5 hover:border-rose-500/30 p-4 rounded-2xl flex flex-col items-center justify-center gap-2 transition-all hover:-translate-y-0.5 active:scale-95 group cursor-pointer text-center">
+            <div class="w-11 h-11 rounded-full bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 group-hover:scale-110 transition-transform shadow-[0_0_10px_rgba(244,63,94,0.15)] animate-pulse">
+              <i class="fa-solid fa-fire text-lg"></i>
+            </div>
+            <div>
+              <span class="block text-xs font-black tracking-widest text-rose-400 font-display">DARE</span>
+              <span class="text-[8px] text-slate-500 mt-0.5 block tracking-wider uppercase font-extrabold">Perform Action</span>
+            </div>
+          </button>
+        </div>
+        
+        <button onclick="dismissToArenaWheel()" class="text-[9px] text-slate-500 hover:text-slate-300 font-extrabold uppercase tracking-widest text-center flex items-center justify-center gap-1 cursor-pointer transition-colors pt-1">
+          <i class="fa-solid fa-arrow-left"></i> Re-spin / Cancel Selector
+        </button>
+      </section>
+
+      <!-- SCREEN 4: DISCOVERY CHALLENGE DISPLAY WITH SKIP & COMPLETE -->
+      <section id="screen-challenge" class="hidden flex-col gap-3.5 items-center w-full h-full py-1.5 justify-between">
+        <div class="flex items-center justify-between w-full border-b border-white/5 pb-2">
+          <div class="flex items-center gap-1.5">
+            <span id="label-active-guest" class="text-[10px] font-extrabold bg-white/5 border border-cyan-400/35 px-2.5 py-0.5 rounded-full text-cyan-300 flex items-center gap-1.5 font-display">
+              Sophia
+            </span>
+            <span class="text-[8px] text-slate-500 font-black uppercase tracking-wider">pulls active card</span>
+          </div>
+          <span id="challengePillType" class="text-[8.5px] font-black tracking-widest px-2.5 py-0.5 rounded-full border bg-cyan-500/10 border-cyan-500/20 text-cyan-300 shadow-[0_0_8px_rgba(6,182,212,0.15)]">
+            TRUTH
+          </span>
+        </div>
+
+        <!-- Custom visual prompt slider frame -->
+        <div class="w-full py-6 px-4 bg-black/45 rounded-2xl relative overflow-hidden flex flex-col items-center justify-center text-center my-0.5 border border-white/5 shadow-inner min-h-[140px]">
+          <div id="challengeCategoryBadge" class="absolute top-1.5 right-2 rounded px-1.5 py-0.2 text-[7.5px] font-bold tracking-widest bg-white/5 border border-white/10 font-mono text-slate-400 uppercase">
+            FRIENDS
+          </div>
+          <span class="absolute top-2 left-4 text-4xl text-white/5 select-none font-serif font-black">“</span>
+          
+          <p id="challengeTextPrompt" class="font-display text-[12.5px] sm:text-sm font-bold text-slate-100 leading-normal max-w-[275px] tracking-wide transition-opacity duration-150">
+            Evaluating prompt...
+          </p>
+          
+          <span class="absolute bottom-1 right-4 text-4xl text-white/5 select-none font-serif font-black">”</span>
+        </div>
+
+        <div class="w-full flex flex-col gap-2">
+          <!-- 6. HIGH-PERFORMANCE ROUTING INSTANT COMPLETED BUTTON WITH GRAPHICS POP EFFECT -->
+          <button id="completed-btn" onclick="triggerCompletedRoute()" class="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white text-xs font-black tracking-widest uppercase rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-md">
+            <i class="fa-solid fa-circle-check"></i> CHALLENGE COMPLETED
+          </button>
+
+          <div class="grid grid-cols-2 gap-1.5">
+            <!-- 4. TRACKING SKIP CARD BUTTON pulling non-repetitive prompt -->
+            <button onclick="skipActivePrompt()" class="py-2.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-[9px] font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1 active:scale-95">
+              <i class="fa-solid fa-arrows-rotate text-[10px]"></i> SKIP CARD
             </button>
-            <button onclick="returnToArena()" class="py-2.5 bg-rose-950/20 border border-rose-500/10 rounded-xl text-[9px] font-bold tracking-wider hover:bg-rose-900/30 text-rose-400">
-              <i class="fa-solid fa-xmark mr-1"></i> swap guest
+            <button onclick="retreatToArenaWheel()" class="py-2.5 bg-rose-950/20 border border-rose-500/15 text-rose-400 rounded-xl text-[9px] font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1 active:scale-95">
+              <i class="fa-solid fa-person-running"></i> RETREAT
             </button>
           </div>
         </div>
@@ -299,203 +332,160 @@
     </div>
   </main>
 
-  <!-- REUSABLE FOOTER -->
-  <footer class="text-slate-500 text-[8.5px] font-mono tracking-widest uppercase z-10 p-1 mt-1 text-center">
-    ⚡ Premium Custom Offline Game Companion ⚡
+  <footer class="w-full max-w-sm mx-auto z-10 text-[9px] text-center font-mono opacity-80 tracking-wide text-slate-500 select-none pb-1 flex-shrink-0 font-extrabold uppercase">
+    ⚡ Adaptive Screen Resolution Configured • Full Audio Synth ⚡
   </footer>
 
-  <!-- DYNAMIC SHARE MODAL -->
-  <div id="share-modal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-xl z-50 flex items-center justify-center p-3">
-    <div class="bg-[#0b0c16] border border-cyan-500/20 rounded-3xl w-full max-w-xs p-5 relative text-center">
-      <button onclick="toggleShare(false)" class="absolute top-3.5 right-3.5 text-slate-400 p-1 hover:text-white transition-colors cursor-pointer">
-        <i class="fa-solid fa-xmark text-sm"></i>
-      </button>
-      <i class="fa-solid fa-share-nodes text-emerald-400 text-2xl mb-1.5 animate-bounce"></i>
-      <h3 class="font-display text-sm font-black text-white uppercase tracking-wider">Dynamic Lobby QR</h3>
-      <p class="text-[9.5px] text-slate-400 mt-1 pb-3">Guests scan to input custom cards from their phones!</p>
-      <div class="p-2 border border-white/5 bg-black/50 rounded-2xl inline-block shadow-xl my-1">
-        <canvas id="qr-canvas" class="w-32 h-32 rounded-lg"></canvas>
-      </div>
-      <div class="grid grid-cols-2 gap-2 mt-4">
-        <button onclick="dispatchWhatsApp()" class="py-2 bg-green-600 hover:bg-green-500 text-white font-bold text-[9px] uppercase rounded-lg">WhatsApp</button>
-        <button onclick="copyLobby()" class="py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[9px] uppercase rounded-lg">
-          <span id="btn-copy">Copy Link</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
   <script>
-    // DENSE DYNAMIC QUESTION DATABASES (COMPACTED TO EMIT ZERO TOKEN WASTE)
-    const DATABASE_MAP = {
+    // 4. EXHAUSTIVE DECK DATABASE & HIGH VALUE TRACKING QUEUES
+    const MASTER_QUESTION_DATABASE = {
       friends: {
         truths: [
-          "Who is the most likely person here to survive a zombie apocalypse, and why?",
-          "Have you ever told a group secret you promised to keep, and who did you leak it to?",
-          "What was your honest first impression of the player sitting to your right?",
-          "What is the absolute silliest reason you have ever broken off a close friendship?",
-          "If you had to swap lives with one guest in this room for 24 hours, who and why?",
-          "Have you ever made up a fake excuse just to avoid hanging out with someone here?",
-          "Who in this room has the highest potential to become an eccentric billionaire?"
+          "Who is the most likely person in this room to survive on a deserted island, and why?",
+          "Have you ever told a secret you promised to keep, and who did you tell?",
+          "What was your genuine first impression of the person sitting to your right?",
+          "What is the absolute silliest reason you have ever ended a friendship?",
+          "If you had to swap lives with anyone here for 24 hours, who would it be and why?",
+          "Have you ever pretended to be busy or asleep to avoid hanging out with someone here?",
+          "What is your biggest minor pet peeve about the person sitting directly opposite from you?",
+          "What is a secret talent of yours that nobody else in this room knows about?",
+          "What is the worst advice you have ever given that someone actually followed?",
+          "Which player is the first you would call if you needed help out of a sticky situation?"
         ],
         dares: [
-          "Open your phone photo archive and show the last 3 photos back-to-back with zero skips.",
-          "Perform a highly accurate impression of another player here until the group guesses who.",
-          "Wear your socks on your hands until the first spin of the next full round.",
-          "Mime washing a highly aggressive, massive imaginary tiger for 30 seconds straight.",
-          "Let the group check your recent searches folder on social media for 10 seconds.",
-          "Do your best dramatic runaway model walk across the room and strikes three silly poses."
+          "Show the group the last 3 photos in your camera roll and explain them.",
+          "Do a silent impression of someone in this room until the group guesses it.",
+          "Let the person to your left design a wacky hairstyle on you for the next round.",
+          "Call a random contact on speaker and sing them 15 seconds of any song.",
+          "Speak only in a dramatic Shakespearean accent for the next round of play.",
+          "Give a 1-minute passionate speech about how much you appreciate carbonated water.",
+          "Do your best runway model walk across the room and hold three extreme poses.",
+          "Wear your socks on your hands until the next spinner starts their active turn.",
+          "Perform a passionate interpretive dance representing bacon in the frying pan.",
+          "Let the group look through your phone recent searches for exactly 15 seconds."
         ]
       },
       couples: {
         truths: [
-          "What is the exact memory or moment you realized you had intense feelings for me?",
-          "Describe a secret flirty wish or fantasy of yours you haven't fully spoken out loud.",
-          "What minor quirky habit of mine do you privately adore but publicly pretend to hate?",
-          "If our love life was described as a famous movie title, which one are we playing?",
-          "What is the single most romantic gesture I have ever done that completely swept you away?",
-          "Is there a secret question you have always wanted to ask me but were too shy to raise?"
+          "What was the exact moment you realized you had deep feelings for your partner?",
+          "What is one funny habit your partner has that you secretly find absolutely precious?",
+          "What is the most romantic trip or gesture your partner raised for you?",
+          "If you could modify one tiny, harmless habit of your partner, what would it be?",
+          "What is your absolute favorite memory of our very first week together?",
+          "What is a secret life dream you have not dared to mention fully to your partner?",
+          "What would be your absolute dream destination for a spontaneous couple getaway?",
+          "What is the funniest text message you have ever received from your partner?"
         ],
         dares: [
-          "Hold interlocked eye contact with me for exactly 60 seconds without laughing or talking.",
-          "Whisper your absolute flirty thoughts into my ear in your most sultry tone.",
-          "Give me an intensive, 60-second back or shoulder massage with professional luxury style.",
-          "Feed me a tiny bite of any nearby food as if we were at a five-star romantic restaurant.",
-          "Slow dance with me to imaginary, sweet romantic background soundtrack for 45 seconds.",
-          "Trace a word on my palm with your finger until I successfully guess it (max 3 tries)."
+          "Look deeply into your partner's eyes for 60 seconds without laughing.",
+          "Give your partner a highly appreciative shoulder rub right now.",
+          "Whisper three genuinely honest, deep compliments into your partner's ear.",
+          "Slow-dance with your of-choice partner for 45 seconds without any background music.",
+          "Read aloud the cutest text message your partner has ever sent to your inbox.",
+          "Hold hands with your partner for the next three rounds of the playing cycle.",
+          "Let your partner post a cute, funny status on your social media feed.",
+          "Carry your partner across the room or do a gentle playful cradle sway."
         ]
       },
       family: {
         truths: [
-          "Who is the silliest cook or relative in our house, and what is their signature dish?",
-          "What is a personal household rule we keep that you secretly wish we completely skipped?",
-          "What mischievous act did you pull off as a young child that the parents never found out about?",
-          "If our entire household was adapted as a cartoon show, which famous cartoon family are we?",
-          "What is the silliest minor argument you have ever had with one of your siblings or relatives?",
-          "Which current household chore do you secretly find strangely satisfying to complete?"
+          "What is the most memorable childhood family trip you have ever taken, and why?",
+          "What is a valuable life lesson you learned from your parents or grandparents?",
+          "Which family member are you most comfortable sharing secret topics with?",
+          "What is your all-time favorite home-cooked dish that brings back immediate joy?",
+          "If you could swap chores with any household member for a week, who would it be?",
+          "What is a hilarious household mishap that your family still laughs about today?"
         ],
         dares: [
-          "Balance a soft cushion or toy on your head and walks around the room without dropping it.",
-          "Sing 'Twinkle Twinkle Little Star' using only animal sounds like 'Meow' or 'Woof'.",
-          "Speak only in a high-pitched squeaky cartoony robot voice for the next full round.",
-          "Do 10 rapid jumping jacks while loudly declaring 'I love my beautiful family!' each time.",
-          "Strike a majestic superhero landing pose and stay completely frozen like a statue for 42 seconds.",
-          "Try to speak or sing a classic nursery rhyme while holding your tongue with your finger."
+          "Text a sweet 'thank you' message to a parent, sibling, or close relative.",
+          "Show off your favorite historic childhood photo and share the story behind it.",
+          "Hum your family's favorite classic tune and let people guess what it represents.",
+          "Do a 30-second dramatic recreation of a strict house rule from your childhood.",
+          "Stand on one foot and name 10 family relatives in under 20 seconds.",
+          "Give a huge shoutout speech celebrating the ultimate support person in your family."
         ]
       },
       deep: {
         truths: [
-          "What recurring thought, worry or question keeps you awake at 3:00 AM?",
-          "Describe a single decision in your past that completely shifted your entire life timeline.",
-          "What core belief do you strongly hold that almost nobody around you agrees with?",
-          "If you could write a single line note to your 15-year-old self, what would you say?",
-          "What is an unpopular truth about your own character that you are actively working to accept?",
-          "Describe what vulnerability truly means to you, and when did you last display it?"
+          "What are you most afraid of about growing older, and how do you cope?",
+          "If you could ask a cosmic force for the absolute truth about your future, what would you ask?",
+          "What is the single best piece of wisdom you have ever received in your life?",
+          "What is a major belief you held for years that you recently completely abandoned?",
+          "Is there a personal goal you are quietly working towards that you haven't told anyone?",
+          "What do you want to be remembered for after your lifecycle is completed?"
         ],
         dares: [
-          "Stare at yourself in a mirror or selfie screen for 1 minute and state 3 things you love about you.",
-          "Share a personal deep life lesson that you have never shared with anyone in this room.",
-          "Compose and send a highly supportive, direct memo to a friend you haven't spoken to in ages.",
-          "Look at the player directly on your left and tell them what you think their greatest internal trait is.",
-          "Sit in absolute silence for 60 seconds, taking big breaths and focusing purely on the room aura.",
-          "Give a 1-minute speech about what you hope your personal legacy will be after you leave."
+          "Close your eyes, take 3 deep breaths, and describe your soul passion in 30 seconds.",
+          "Share a quote, philosophy, or mantra that modified your daily mindset.",
+          "Explain what 'genuine happiness' looks like to you in a single sentence without pausing.",
+          "List three things you are deeply, unconditionally grateful for in your life right now.",
+          "Tell the person to your left what positive energetic frequency they radiate most.",
+          "Mute all notifications on your phone for the remainder of this game."
         ]
       },
       extreme: {
         truths: [
-          "What is the most rebellious, high-stakes act you have ever pulled off in a public setting?",
-          "Have you ever confessed your love or crush to someone and been rejected in a massive public way?",
-          "What is the biggest risk you have ever taken with your money, savings, or career path?",
-          "What is the absolute closest you have ever come to getting caught red-handed by authority?",
-          "Have you ever snooped through a partner's or relative's direct notifications when they left?",
-          "What controversial or highly dramatic archive is currently sitting in your direct chats?"
+          "What is the most daring, adrenaline-fueled action you have ever performed?",
+          "Have you ever sneaked out of the house or broken a serious rule?",
+          "What is the biggest public scene you've ever caused, intentionally or not?",
+          "Have you ever lied to get yourself out of serious academic or vocational trouble?",
+          "What is the wildest purchase you've ever made that you hid from your closer circle?",
+          "Have you ever done something highly risky that you advise everyone against doing?"
         ],
         dares: [
-          "Do 20 rapid burpees while counting out loud in your most intense action movie voice.",
-          "Hold a wall sit position for 45 seconds while explaining the entire timeline of your favorite show.",
-          "Lick a tiny drop of hot sauce, lemon juice, or tabasco off your finger without making a funny face.",
-          "Let someone write a funny word or symbol on your forearm using a pen, to stay for the night.",
-          "Do 15 squats while carrying another guest in this room on your back (piggyback style).",
-          "Yell out a window or doorway 'I AM THE TRIALS CHAMPION!' with maximum dramatic flair."
+          "Do 15 pushups while shouting 'IM THE CHAMPION!' after each repetition.",
+          "Let another player draft a wacky status post and send it to your close social circle.",
+          "Eat a raw slice of lemon or swallow a spoonful of vinegar without changing expression.",
+          "Do a stable plank for 45 seconds while telling a self-deprecating story.",
+          "Let the group look through your recent photos gallery for exactly 15 seconds.",
+          "Perform a highly passionate 30-second rockstar air-guitar guitar solo."
         ]
       },
       dark: {
         truths: [
-          "What is the most morally questionable thing you have successfully pulled off to get ahead?",
-          "If guaranteed to never be caught, what major law, crime or draft would you exploit?",
-          "Have you ever directly wished for a guest in this room to fail just to satisfy your inner ego?",
-          "Describe the single calculated lie you have maintained for the longest time to your close circle.",
-          "Which player here do you secretly find to be the most insincere, manipulative, or fake, and why?",
-          "What is the absolute meanest, most unvarnished truth you have ever spoken to someone's face on purpose?",
-          "Is there a person in this room that you deeply dislike or feel irritated by, yet match energies with?"
+          "What is the darkest or most controversial opinion you secretly believe is true?",
+          "Have you ever secretly sabotaged someone's success out of temporary petty jealousy?",
+          "What is the absolute worst text message you sent that you immediately regretted?",
+          "What is the most morally gray lie you have told to protect your private ego?",
+          "Who is the person in this room that you envy or find hardest to trust?",
+          "What is your deepest, most intense secret desire that you've never shared?"
         ],
         dares: [
-          "Look someone directly in their eyes and whisper the creepiest horror movie quote you know.",
-          "Perform your absolute most chilling and sinister villainous laugh for 15 seconds straight.",
-          "Allow the group to crawl through your deleted notifications or notes archive for 10 seconds.",
-          "State the single absolute darkest trait about your own mind that you actively try to hide from others.",
-          "Look the person sitting direct to your left in the eyes and declare the coldest truth about their persona.",
-          "Let the person sitting opposite you inspect your last 5 sent direct messages on any social platform.",
-          "Dramatically outline a highly vindictive fictional plan to ruin a public enemy’s life if they crossed you."
+          "Reveal the most embarrassing search on your phone’s history without hiding.",
+          "Let the person to your right send a text to one contact of their choosing.",
+          "Whisper a scandalous secret about yourself to the person sitting opposite you.",
+          "Show the group the last private message you received from an ex or crush.",
+          "Exchange garments or wear one item of clothing upside down for 3 rounds.",
+          "Close your eyes and let the group draw a tiny mustache on you with makeup/marker."
         ]
       }
     };
 
-    // APP GLOBAL STATE MANAGERS
-    let activeCategory = 'friends';
-    let blendList = ['friends', 'couples'];
-    let customDatabase = [
-      { id: 'c-1', text: 'Who in this room is the wizard master of the group?', type: 'truth' },
-      { id: 'c-2', text: 'Dance on one foot like a majestic flamingo in high wind for 30s.', type: 'dare' }
-    ];
+    // Runtime state tracking arrays to safely prevent duplicate prompts
+    let runtimeQueues = JSON.parse(JSON.stringify(MASTER_QUESTION_DATABASE));
 
-    let currentLobbyPlayers = [...players];
-    let selectedSpinnerEmoji = '🦊';
-    let localScreenState = 'setup';
-    let gameSoundsMuted = localStorage.getItem('tot_mute') === 'true';
+    // Dynamic player management array
+    let players = [
+      { name: "Sophia", emoji: "🦊", score: 0 },
+      { name: "Alex", emoji: "🐼", score: 0 },
+      { name: "Marcus", emoji: "🐨", score: 0 },
+      { name: "Yuki", emoji: "🐯", score: 0 }
+    ];
+    
+    const EMORJIS_DATABASE = ['🦊', '🐼', '🐨', '🐯', '🦁', '🐸', '🐙', '🦄', '🦖', '🐝', '🥑', '⚡', '🔥', '💀', '👽', '😎', '😜', '👻', '👑', '🌈', '⛄', '🍀'];
+    let localSelectedEmoji = '🦊';
+    let currentThemeDeck = 'friends';
+    let selectedVictimIndex = 0;
+    let selectedPromptType = 'truth';
+    let isCurrentlySpinning = false;
+    let currentBottleDegree = 0;
+    let areSoundsEnabled = true;
+
+    // 5. WEB AUDIO SYNTHESIZER ENGINE (Pure programmatic nodes)
     let audioContextInstance = null;
 
-    let spinAngle = 0;
-    let isSpinningActive = false;
-    let selectedPlayerIndex = 0;
-    let activeStageChoice = 'truth';
-
-    // RENDER FUNCTIONS
-    function initApp() {
-      renderEmojis();
-      renderTags();
-      selectDeck('friends');
-      updateMuteUI();
-      // Setup window resize listener for absolute radial safety
-      window.addEventListener('resize', renderRadialGuests);
-    }
-
-    function updateMuteUI() {
-      const btn = document.getElementById('mute-btn');
-      const icon = document.getElementById('mute-icon');
-      const txt = document.getElementById('mute-text');
-      if (!btn) return;
-      if (gameSoundsMuted) {
-        btn.className = 'p-1 px-2.5 rounded-full border border-rose-900 bg-rose-950/45 text-rose-300 text-[8px] font-bold tracking-wider flex items-center gap-1 cursor-pointer';
-        icon.className = 'fa-solid fa-volume-xmark';
-        txt.innerText = 'MUTED';
-      } else {
-        btn.className = 'p-1 px-2.5 rounded-full border border-white/10 bg-white/5 text-slate-300 text-[8px] font-bold tracking-wider flex items-center gap-1 cursor-pointer';
-        icon.className = 'fa-solid fa-volume-high';
-        txt.innerText = 'SOUNDS';
-      }
-    }
-
-    function toggleMute() {
-      gameSoundsMuted = !gameSoundsMuted;
-      localStorage.setItem('tot_mute', gameSoundsMuted ? 'true' : 'false');
-      updateMuteUI();
-      if (!gameSoundsMuted) beep(1200, 0.08);
-    }
-
-    // WEB AUDIO GENERATORS
-    function getSpeechCtx() {
-      if (gameSoundsMuted) return null;
+    function getAudioContext() {
+      if (!areSoundsEnabled) return null;
       try {
         if (!audioContextInstance) {
           audioContextInstance = new (window.AudioContext || window.webkitAudioContext)();
@@ -504,556 +494,671 @@
           audioContextInstance.resume();
         }
         return audioContextInstance;
-      } catch(e) { return null; }
+      } catch (e) {
+        return null;
+      }
     }
 
-    function beep(freq, duration, type='sine', volume=0.1) {
-      const ctx = getSpeechCtx();
-      if (!ctx) return;
+    function playSynthesizedTone(frequency, duration, type = 'sine', gainVal = 0.08) {
+      if (!areSoundsEnabled) return;
       try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
+        
         osc.type = type;
-        osc.frequency.setValueAtTime(freq, ctx.currentTime);
-        gain.gain.setValueAtTime(volume, ctx.currentTime);
+        osc.frequency.setValueAtTime(frequency, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(frequency / 4, ctx.currentTime + duration);
+        
+        gain.gain.setValueAtTime(gainVal, ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+        
         osc.connect(gain);
         gain.connect(ctx.destination);
+        
         osc.start();
         osc.stop(ctx.currentTime + duration);
-      } catch(ex) {}
+      } catch (e) {}
     }
 
-    function playTriggerSpin() {
-      beep(150, 0.35, 'triangle', 0.15);
-      setTimeout(() => beep(300, 0.25, 'triangle', 0.1), 80);
+    function playTickSound(speedPercentage) {
+      // Whirr tick: drops pitch and frequency density tracking the rotating velocity decay
+      const pitch = 1600 + (speedPercentage * 1800);
+      playSynthesizedTone(pitch, 0.012, 'sine', 0.06);
     }
 
-    function playClink() {
-      beep(1000 + Math.random() * 800, 0.05, 'sine', 0.12);
+    function playClick() {
+      playSynthesizedTone(3800, 0.015, 'sine', 0.08);
     }
 
-    function playFanfare() {
-      const c = getSpeechCtx();
-      if (!c) return;
-      const now = c.currentTime;
-      const playTone = (f, start, dur) => {
-        const o = c.createOscillator();
-        const g = c.createGain();
-        o.type = 'triangle';
-        o.frequency.setValueAtTime(f, start);
-        g.gain.setValueAtTime(0.12, start);
-        g.gain.exponentialRampToValueAtTime(0.001, start + dur);
-        o.connect(g);
-        g.connect(c.destination);
-        o.start(start);
-        o.stop(start + dur);
-      };
-      playTone(523.25, now, 0.15); // C5
-      playTone(659.25, now + 0.08, 0.15); // E5
-      playTone(783.99, now + 0.16, 0.15); // G5
-      playTone(1046.50, now + 0.24, 0.35); // C6
-    }
-
-    function playFail() {
-      beep(300, 0.3, 'sawtooth', 0.08);
-    }
-
-    // GAME NAVIGATION CONTROLLER
-    function navigate(screenName) {
-      ['screen-setup', 'screen-arena', 'screen-choice', 'screen-challenge'].forEach(s => {
-        document.getElementById(s).classList.add('hidden');
-        document.getElementById(s).classList.remove('flex');
-      });
-      document.getElementById('screen-' + screenName).classList.remove('hidden');
-      document.getElementById('screen-' + screenName).classList.add('flex');
-      localScreenState = screenName;
-    }
-
-    function goToSetup() {
-      beep(600, 0.1);
-      navigate('setup');
-    }
-
-    function returnToArena() {
-      beep(600, 0.1);
-      navigate('arena');
-    }
-
-    function enterArena() {
-      if (currentLobbyPlayers.length < 2) {
-        alert("Please add at least 2 guests to launch the vortex!");
-        return;
-      }
-      playFanfare();
-      navigate('arena');
-      renderRadialGuests();
-    }
-
-    // EMOTE SECTOR CONTROLLER
-    function renderEmojis() {
-      const row = document.getElementById('emoji-row');
-      row.innerHTML = '';
-      AVAILABLE_EMOJIS.forEach(emo => {
-        const div = document.createElement('div');
-        div.className = 'w-7 h-7 flex items-center justify-center rounded-lg bg-white/5 border border-white/10 text-sm cursor-pointer hover:bg-white/10 active:scale-90 flex-shrink-0';
-        div.innerText = emo;
-        div.onclick = () => {
-          selectedSpinnerEmoji = emo;
-          document.getElementById('emoji-preview').innerText = emo;
-          beep(2200, 0.02);
+    function playDing() {
+      if (!areSoundsEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const triggerTone = (f, d, t) => {
+          const osc = ctx.createOscillator();
+          const g = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(f, t);
+          g.gain.setValueAtTime(0.12, t);
+          g.gain.exponentialRampToValueAtTime(0.001, t + d);
+          osc.connect(g);
+          g.connect(ctx.destination);
+          osc.start(t);
+          osc.stop(t + d);
         };
-        row.appendChild(div);
+        // Harmonic landing notification chimes
+        triggerTone(523.25, 0.15, now);       // C5
+        triggerTone(659.25, 0.15, now + 0.08);  // E5
+        triggerTone(783.99, 0.15, now + 0.16);  // G5
+        triggerTone(1046.50, 0.25, now + 0.24); // C6
+      } catch (e) {}
+    }
+
+    function playSlide() {
+      playSynthesizedTone(600, 0.1, 'sine', 0.06);
+    }
+
+    function playSuccessChord() {
+      if (!areSoundsEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const triggerTone = (f, d, t) => {
+          const osc = ctx.createOscillator();
+          const g = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(f, t);
+          g.gain.setValueAtTime(0.1, t);
+          g.gain.exponentialRampToValueAtTime(0.001, t + d);
+          osc.connect(g);
+          g.connect(ctx.destination);
+          osc.start(t);
+          osc.stop(t + d);
+        };
+        triggerTone(587.33, 0.2, now); // D5
+        triggerTone(739.99, 0.2, now + 0.06); // F#5
+        triggerTone(880.00, 0.3, now + 0.12); // A5
+      } catch (e) {}
+    }
+
+    function playErrorBeep() {
+      playSynthesizedTone(250, 0.25, 'triangle', 0.12);
+    }
+
+    // TOGGLE SOUND EFFECTS ENGINES
+    function toggleSoundtracks() {
+      areSoundsEnabled = !areSoundsEnabled;
+      const btn = document.getElementById('soundToggleBtn');
+      const icon = document.getElementById('soundIcon');
+      if (areSoundsEnabled) {
+        icon.className = "fa-solid fa-volume-high text-cyan-400";
+        btn.querySelector('span').innerText = "SOUNDS: ON";
+        playClick();
+      } else {
+        icon.className = "fa-solid fa-volume-xmark text-red-500";
+        btn.querySelector('span').innerText = "SOUNDS: OFF";
+      }
+    }
+
+    // INITIAL SETUP & RENDERINGS
+    window.addEventListener('DOMContentLoaded', () => {
+      buildEmojiSelectors();
+      updateLobbyBubbles();
+      populateCentralBottle();
+      
+      // Auto-unlock WebAudio on mobile interactions
+      const unlockAudioContext = () => {
+        getAudioContext();
+        window.removeEventListener('click', unlockAudioContext);
+        window.removeEventListener('touchstart', unlockAudioContext);
+      };
+      window.addEventListener('click', unlockAudioContext);
+      window.addEventListener('touchstart', unlockAudioContext);
+    });
+
+    // 2. PLAYER LOBBY EMORJI ENGINE POPULATION
+    function buildEmojiSelectors() {
+      const container = document.getElementById('emoji-selectors-slider');
+      container.innerHTML = '';
+      EMORJIS_DATABASE.forEach(emoji => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.onclick = () => { selectLobbyEmoji(emoji); };
+        const isActive = (localSelectedEmoji === emoji);
+        btn.className = `text-lg p-2 rounded-xl border transition-all active:scale-90 flex-shrink-0 cursor-pointer ${
+          isActive 
+            ? 'bg-cyan-950 border-cyan-400 text-white scale-105 shadow-[0_0_8px_rgba(34,211,238,0.35)]' 
+            : 'bg-white/5 border-white/5 text-slate-400 hover:bg-white/10'
+        }`;
+        btn.innerText = emoji;
+        container.appendChild(btn);
       });
     }
 
-    function renderTags() {
-      const tagsBox = document.getElementById('tags-box');
-      tagsBox.innerHTML = '';
-      currentLobbyPlayers.forEach((p, index) => {
-        const span = document.createElement('div');
-        span.className = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-xs text-slate-205 select-none';
-        span.innerHTML = `
-          <span>${p.emoji}</span>
-          <span class="font-extrabold max-w-[65px] truncate">${p.name}</span>
-          <button onclick="removePlayer(${index})" class="text-slate-400 hover:text-red-400 font-bold ml-1 cursor-pointer">×</button>
-        `;
-        tagsBox.appendChild(span);
-      });
-      document.getElementById('player-count').innerText = currentLobbyPlayers.length;
+    function selectLobbyEmoji(emoji) {
+      localSelectedEmoji = emoji;
+      document.getElementById('selected-emoji-display').innerText = emoji;
+      playClick();
+      buildEmojiSelectors();
     }
 
-    function addPlayer() {
-      const input = document.getElementById('player-input');
-      const name = input.value.trim();
-      if (!name) return;
-      if (currentLobbyPlayers.some(p => p.name.toLowerCase() === name.toLowerCase())) {
-        alert("This guest is already in the lobby!");
+    function addNewPlayer() {
+      const input = document.getElementById('player-input-box');
+      const val = input.value.trim();
+      if (!val) return;
+      
+      if (players.length >= 12) {
+        playErrorBeep();
+        alert("Maximum limit of 12 players reached for spacing layout!");
         return;
       }
-      currentLobbyPlayers.push({ name, emoji: selectedSpinnerEmoji, score: 0 });
+
+      players.push({ name: val, emoji: localSelectedEmoji, score: 0 });
       input.value = '';
-      beep(880, 0.12, 'sine', 0.15);
-      renderTags();
+      
+      // Rotate selected emoji programmatically
+      const randIndex = Math.floor(Math.random() * EMORJIS_DATABASE.length);
+      selectLobbyEmoji(EMORJIS_DATABASE[randIndex]);
+      
+      playDing();
+      updateLobbyBubbles();
     }
 
-    function removePlayer(idx) {
-      if (currentLobbyPlayers.length <= 2) {
-        alert("Need at least 2 players in the lobby map!");
+    document.getElementById('player-input-box').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        addNewPlayer();
+      }
+    });
+
+    function deleteGuest(idx) {
+      players.splice(idx, 1);
+      playErrorBeep();
+      updateLobbyBubbles();
+    }
+
+    function updateLobbyBubbles() {
+      const parent = document.getElementById('avatar-bubbles-wrapper');
+      const countLabel = document.getElementById('lobby-count');
+      parent.innerHTML = '';
+      countLabel.innerText = players.length;
+
+      if (players.length === 0) {
+        parent.innerHTML = `<p class="text-[10px] text-slate-500 italic py-1">Lobby empty. Choose avatar & enter guest name!</p>`;
+        document.getElementById('enter-arena-btn').disabled = true;
         return;
       }
-      currentLobbyPlayers.splice(idx, 1);
-      beep(200, 0.15, 'triangle');
-      renderTags();
+
+      document.getElementById('enter-arena-btn').disabled = (players.length < 2);
+
+      players.forEach((p, idx) => {
+        const bubble = document.createElement('div');
+        bubble.className = "px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1.5 bg-white/5 border border-white/10 text-cyan-300 animate-pop-scale";
+        bubble.innerHTML = `
+          <span>${p.emoji}</span>
+          <span class="text-slate-200">${p.name}</span>
+          <span class="text-[9px] text-emerald-400 font-mono bg-emerald-950/40 px-1 rounded border border-emerald-500/10">${p.score}</span>
+          <button onclick="deleteGuest(${idx})" class="text-slate-400 hover:text-red-400 transition-colors pl-1 cursor-pointer">
+            <i class="fa-solid fa-xmark text-[9px]"></i>
+          </button>
+        `;
+        parent.appendChild(bubble);
+      });
     }
 
-    // CATEGORY MATRIX LOGIC
-    function selectDeck(deckName) {
-      activeCategory = deckName;
-      beep(1500, 0.05);
+    // DECK SWITCH PANEL HANDLERS
+    function changeCurrentDeck(deckName) {
+      currentThemeDeck = deckName;
+      playSlide();
 
-      const listDecks = ['friends', 'couples', 'family', 'deep', 'extreme', 'dark', 'custom'];
-      listDecks.forEach(item => {
-        const card = document.getElementById('deck-' + item);
-        if (!card) return;
-        
-        let inactiveCls = 'p-2 rounded-xl border border-white/5 bg-white/5 cursor-pointer';
-        if (item === 'custom') inactiveCls = 'p-2.5 rounded-xl border border-white/5 bg-white/5 cursor-pointer';
+      const standardDecks = ['friends', 'couples', 'family', 'deep', 'extreme', 'dark'];
+      
+      standardDecks.forEach(item => {
+        const btn = document.getElementById('deck-btn-' + item);
+        const icon = document.getElementById('deck-icon-' + item);
+        if (!btn || !icon) return;
+
+        let inactiveClasses = 'p-2.5 rounded-xl border border-white/5 bg-white/5 text-slate-400 flex items-center justify-between text-[11px] font-bold text-left transition-all ';
+        if (item === 'dark') {
+          inactiveClasses += 'hover:border-red-650/40 hover:text-red-400 cursor-pointer';
+        } else {
+          const hCol = item === 'friends' ? 'cyan' : item === 'couples' ? 'rose' : item === 'family' ? 'amber' : item === 'deep' ? 'purple' : 'fuchsia';
+          inactiveClasses += `hover:text-${hCol}-400 cursor-pointer`;
+        }
 
         if (item === deckName) {
           if (item === 'friends') {
-            card.className = 'p-2 rounded-xl border border-cyan-400 bg-cyan-950/20 cursor-pointer';
-            card.querySelector('.chk').className = 'chk text-cyan-400';
-            card.querySelector('.chk').innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+            btn.className = 'p-2.5 rounded-xl border border-cyan-400 bg-cyan-950/20 text-slate-100 flex items-center justify-between text-[11px] font-bold text-left transition-all cursor-pointer';
+            icon.className = 'fa-solid fa-circle-check text-cyan-400 text-[10px]';
           } else if (item === 'couples') {
-            card.className = 'p-2 rounded-xl border border-rose-500 bg-rose-950/20 cursor-pointer';
-            card.querySelector('.chk').className = 'chk text-rose-500';
-            card.querySelector('.chk').innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+            btn.className = 'p-2.5 rounded-xl border border-rose-500 bg-rose-950/20 text-slate-100 flex items-center justify-between text-[11px] font-bold text-left transition-all cursor-pointer';
+            icon.className = 'fa-solid fa-circle-check text-rose-500 text-[10px]';
           } else if (item === 'family') {
-            card.className = 'p-2 rounded-xl border border-amber-400 bg-amber-950/20 cursor-pointer';
-            card.querySelector('.chk').className = 'chk text-amber-400';
-            card.querySelector('.chk').innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+            btn.className = 'p-2.5 rounded-xl border border-amber-400 bg-amber-950/20 text-slate-100 flex items-center justify-between text-[11px] font-bold text-left transition-all cursor-pointer';
+            icon.className = 'fa-solid fa-circle-check text-amber-400 text-[10px]';
           } else if (item === 'deep') {
-            card.className = 'p-2 rounded-xl border border-purple-400 bg-purple-950/20 cursor-pointer';
-            card.querySelector('.chk').className = 'chk text-purple-400';
-            card.querySelector('.chk').innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+            btn.className = 'p-2.5 rounded-xl border border-purple-400 bg-purple-950/20 text-slate-100 flex items-center justify-between text-[11px] font-bold text-left transition-all cursor-pointer';
+            icon.className = 'fa-solid fa-circle-check text-purple-400 text-[10px]';
           } else if (item === 'extreme') {
-            card.className = 'p-2 rounded-xl border border-fuchsia-400 bg-fuchsia-950/20 cursor-pointer';
-            card.querySelector('.chk').className = 'chk text-fuchsia-400';
-            card.querySelector('.chk').innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+            btn.className = 'p-2.5 rounded-xl border border-fuchsia-400 bg-fuchsia-950/20 text-slate-100 flex items-center justify-between text-[11px] font-bold text-left transition-all cursor-pointer';
+            icon.className = 'fa-solid fa-circle-check text-fuchsia-400 text-[10px]';
           } else if (item === 'dark') {
-            card.className = 'p-2 rounded-xl border border-red-655 bg-red-950/30 font-bold cursor-pointer';
-            card.querySelector('.chk').className = 'chk text-red-500';
-            card.querySelector('.chk').innerHTML = '<i class="fa-solid fa-circle-check"></i>';
-          } else if (item === 'custom') {
-            card.className = 'p-2.5 rounded-xl border border-emerald-400 bg-emerald-950/20 cursor-pointer';
-            document.getElementById('custom-chk').className = 'w-4 h-4 rounded-full border border-emerald-400 bg-emerald-400 flex items-center justify-center text-[8px] text-white';
-            document.getElementById('custom-chk').innerHTML = '<i class="fa-solid fa-check"></i>';
+            btn.className = 'p-2.5 rounded-xl border border-red-600 bg-red-950/35 text-slate-100 flex items-center justify-between text-[11px] font-bold text-left transition-all shadow-[0_0_12px_rgba(239,68,68,0.25)] cursor-pointer';
+            icon.className = 'fa-solid fa-circle-check text-red-500 text-[10px]';
           }
         } else {
-          card.className = inactiveCls;
-          if (item !== 'custom') {
-            card.querySelector('.chk').className = 'chk text-slate-600';
-            card.querySelector('.chk').innerHTML = '<i class="fa-regular fa-circle"></i>';
-          } else {
-            document.getElementById('custom-chk').className = 'w-4 h-4 rounded-full border border-slate-600 flex items-center justify-center text-[8px]';
-            document.getElementById('custom-chk').innerHTML = '';
-          }
+          btn.className = inactiveClasses;
+          icon.className = 'fa-regular fa-circle text-slate-650 text-[10px]';
         }
       });
 
-      const drawer = document.getElementById('custom-editor');
-      if (deckName === 'custom') {
-        drawer.classList.remove('hidden');
-        renderCustomList();
-      } else {
-        drawer.classList.add('hidden');
-      }
-
-      updateThemeColors();
+      refreshBackgroundThemes();
+      populateCentralBottle();
     }
 
-    function toggleCustomBlend(cat) {
-      beep(1500, 0.05);
-      if (blendList.includes(cat)) {
-        if (blendList.length > 1) {
-          blendList = blendList.filter(c => c !== cat);
-        }
-      } else {
-        blendList.push(cat);
-      }
+    function refreshBackgroundThemes() {
+      let grad = 'from-[#061d24] via-[#004e64] to-[#124e3f]'; 
+      let titleBadgeCls = 'inline-flex items-center gap-1.5 px-3 py-0.5 bg-cyan-500/10 border border-cyan-400 text-cyan-300 rounded-full text-[8px] font-black tracking-widest uppercase shadow-inner';
+      let taglineText = '🎉 Friends: Laughs, group memories & secrets';
+      
+      const overlay = document.getElementById('ambientOverlay');
+      const g1 = document.getElementById('ambientGlow1');
+      const g2 = document.getElementById('ambientGlow2');
+      const titleTruth = document.getElementById('titleTruth');
+      const titleDare = document.getElementById('titleDare');
+      const titleHeading = document.getElementById('titleHeading');
 
-      ['friends', 'couples', 'dark'].forEach(item => {
-        const btn = document.getElementById('blend-' + item);
-        if (!btn) return;
-        if (blendList.includes(item)) {
-          btn.className = 'px-1.5 py-0.5 rounded text-[8px] font-bold border border-emerald-400 bg-emerald-500/10 text-emerald-300';
-        } else {
-          btn.className = 'px-1.5 py-0.5 rounded text-[8px] font-bold border border-white/10 text-slate-400';
-        }
-      });
-    }
+      g1.className = 'absolute w-[300px] h-[300px] rounded-full blur-[100px] top-[10%] left-[-15%] pointer-events-none transition-all duration-1000';
+      g2.className = 'absolute w-[340px] h-[340px] rounded-full blur-[120px] bottom-[10%] right-[-15%] pointer-events-none transition-all duration-1000';
 
-    function addCustomQuestion() {
-      const input = document.getElementById('custom-q-text');
-      const text = input.value.trim();
-      if (!text) return;
-      const type = document.getElementById('custom-q-type').value;
-
-      customDatabase.push({
-        id: 'cust-' + Date.now(),
-        text,
-        type
-      });
-      input.value = '';
-      beep(500, 0.12, 'sine');
-      renderCustomList();
-    }
-
-    function removeCustomQuestion(id) {
-      customDatabase = customDatabase.filter(q => q.id !== id);
-      beep(200, 0.1);
-      renderCustomList();
-    }
-
-    function renderCustomList() {
-      const box = document.getElementById('custom-q-list');
-      box.innerHTML = '';
-      if (customDatabase.length === 0) {
-        box.innerHTML = `<p class="text-[8px] text-slate-500 italic">No custom cards created yet.</p>`;
-        return;
-      }
-      customDatabase.forEach(q => {
-        const div = document.createElement('div');
-        div.className = 'flex justify-between items-center text-[9px] bg-white/5 border border-white/10 rounded p-1 text-slate-300 gap-2';
-        div.innerHTML = `
-          <span class="font-bold text-[8px] ${q.type==='truth'?'text-cyan-400':'text-rose-450'}">${q.type.toUpperCase()}</span>
-          <span class="truncate flex-grow text-left">${q.text}</span>
-          <button onclick="removeCustomQuestion('${q.id}')" class="text-slate-450 hover:text-red-400 font-bold px-1 select-none">×</button>
-        `;
-        box.appendChild(div);
-      });
-    }
-
-    function updateThemeColors() {
-      let grad = 'from-[#061d24] via-[#004e64] to-[#124e3f]';
-      let titleBadge = 'px-2.5 py-0.5 bg-cyan-500/10 border border-cyan-400 text-cyan-300 rounded-full text-[8px] font-bold tracking-wider uppercase';
-      let tagline = '🎉 Friends: Group humor & secrets';
-
-      const g1 = document.getElementById('glow1');
-      const g2 = document.getElementById('glow2');
-      g1.className = 'absolute w-72 h-72 rounded-full blur-[100px] top-[10%] left-[-15%] pointer-events-none transition-colors duration-1000';
-      g2.className = 'absolute w-80 h-80 rounded-full blur-[120px] bottom-[10%] right-[-15%] pointer-events-none transition-colors duration-1000';
-
-      if (activeCategory === 'friends') {
+      if (currentThemeDeck === 'friends') {
         grad = 'from-[#061d24] via-[#004e64] to-[#124e3f]';
-        titleBadge = 'px-2.5 py-0.5 bg-cyan-500/10 border border-cyan-400 text-cyan-300 rounded-full text-[8px] font-bold tracking-wider uppercase bg-cyan-500/15';
-        tagline = '🎉 Friends: Group humor & secrets';
+        titleBadgeCls = 'inline-flex items-center gap-1.5 px-3 py-0.5 bg-cyan-500/10 border border-cyan-400 text-cyan-300 rounded-full text-[8.5px] font-black tracking-widest uppercase shadow-inner';
+        taglineText = '🎉 Friends: Laughs, group memories & secrets';
         g1.classList.add('bg-cyan-500/10');
         g2.classList.add('bg-emerald-600/10');
-      } else if (activeCategory === 'couples') {
-        grad = 'from-[#3b0712] via-[#881337] to-[#1d0309]';
-        titleBadge = 'px-2.5 py-0.5 bg-rose-500/10 border border-rose-500 text-rose-300 rounded-full text-[8px] font-bold tracking-wider uppercase';
-        tagline = '👩‍❤️‍👨 Couples: Romantics, flirts & heat';
-        g1.classList.add('bg-rose-500/20');
-        g2.classList.add('bg-pink-700/15');
-      } else if (activeCategory === 'family') {
-        grad = 'from-[#451a03] via-[#7c2d12] to-[#1a0f0a]';
-        titleBadge = 'px-2.5 py-0.5 bg-amber-500/10 border border-amber-400 text-amber-300 rounded-full text-[8px] font-bold tracking-wider uppercase';
-        tagline = '🧸 Family: Clean bonding acts';
-        g1.classList.add('bg-amber-400/15');
-        g2.classList.add('bg-amber-600/10');
-      } else if (activeCategory === 'deep') {
-        grad = 'from-[#1e1b4b] via-[#3b0764] to-[#0f0a21]';
-        titleBadge = 'px-2.5 py-0.5 bg-purple-500/10 border border-purple-400 text-purple-300 rounded-full text-[8px] font-bold tracking-wider uppercase';
-        tagline = '🧠 Deep: Philosophical mind challenges';
-        g1.classList.add('bg-purple-550/20');
-        g2.classList.add('bg-indigo-600/15');
-      } else if (activeCategory === 'extreme') {
-        grad = 'from-[#420422] via-[#701a75] to-[#3a0606]';
-        titleBadge = 'px-2.5 py-0.5 bg-fuchsia-100/10 border border-fuchsia-400 text-fuchsia-300 rounded-full text-[8px] font-bold tracking-wider uppercase';
-        tagline = '💥 Extreme: Bold, public adrenaline trials';
+        titleHeading.className = 'text-4xl sm:text-5xl font-extrabold tracking-[-0.04em] uppercase flex items-center justify-center font-display leading-none select-none transition-all duration-700 neon-glow-cyan';
+        titleTruth.className = 'text-cyan-400 transition-all duration-700';
+        titleDare.className = 'text-fuchsia-400 transition-all duration-700';
+      } else if (currentThemeDeck === 'couples') {
+        grad = 'from-[#2e050f] via-[#700e2b] to-[#1a0105]';
+        titleBadgeCls = 'inline-flex items-center gap-1.5 px-3 py-0.5 bg-rose-500/10 border border-rose-500 text-rose-300 rounded-full text-[8.5px] font-black tracking-widest uppercase shadow-inner';
+        taglineText = '👩‍❤️‍👨 Lovers: Deep connection, intimacy & romance';
+        g1.classList.add('bg-rose-500/15');
+        g2.classList.add('bg-pink-700/10');
+        titleHeading.className = 'text-4xl sm:text-5xl font-extrabold tracking-[-0.04em] uppercase flex items-center justify-center font-display leading-none select-none transition-all duration-700 neon-glow-rose';
+        titleTruth.className = 'text-rose-400 transition-all duration-700';
+        titleDare.className = 'text-pink-400 transition-all duration-700';
+      } else if (currentThemeDeck === 'family') {
+        grad = 'from-[#3b1502] via-[#6a2510] to-[#170e08]';
+        titleBadgeCls = 'inline-flex items-center gap-1.5 px-3 py-0.5 bg-amber-500/10 border border-amber-400 text-amber-300 rounded-full text-[8.5px] font-black tracking-widest uppercase shadow-inner';
+        taglineText = '🧸 Family: Clean, safe, engaging & wholesome';
+        g1.classList.add('bg-amber-500/15');
+        g2.classList.add('bg-orange-600/10');
+        titleHeading.className = 'text-4xl sm:text-5xl font-extrabold tracking-[-0.04em] uppercase flex items-center justify-center font-display leading-none select-none transition-all duration-700 neon-glow-amber';
+        titleTruth.className = 'text-amber-400 transition-all duration-700';
+        titleDare.className = 'text-orange-400 transition-all duration-700';
+      } else if (currentThemeDeck === 'deep') {
+        grad = 'from-[#19163f] via-[#310652] to-[#0e041c]';
+        titleBadgeCls = 'inline-flex items-center gap-1.5 px-3 py-0.5 bg-purple-500/10 border border-purple-400 text-purple-300 rounded-full text-[8.5px] font-black tracking-widest uppercase shadow-inner';
+        taglineText = '🧠 Deep Minds: Mind probes, dreams & philosophy';
+        g1.classList.add('bg-purple-500/15');
+        g2.classList.add('bg-indigo-600/10');
+        titleHeading.className = 'text-4xl sm:text-5xl font-extrabold tracking-[-0.04em] uppercase flex items-center justify-center font-display leading-none select-none transition-all duration-700 neon-glow-purple';
+        titleTruth.className = 'text-purple-400 transition-all duration-700';
+        titleDare.className = 'text-indigo-400 transition-all duration-700';
+      } else if (currentThemeDeck === 'extreme') {
+        grad = 'from-[#420427] via-[#5c1361] to-[#360505]';
+        titleBadgeCls = 'inline-flex items-center gap-1.5 px-3 py-0.5 bg-fuchsia-500/10 border border-fuchsia-400 text-fuchsia-300 rounded-full text-[8.5px] font-black tracking-widest uppercase shadow-inner';
+        taglineText = '💥 Extreme: Bold daredevil antics & thrill calls';
         g1.classList.add('bg-fuchsia-500/15');
-        g2.classList.add('bg-rose-600/15');
-      } else if (activeCategory === 'dark') {
-        grad = 'from-[#0d0d0d] via-[#1a0004] to-[#0a0002]';
-        titleBadge = 'px-2.5 py-0.5 bg-red-650/10 border border-red-500 text-red-405 rounded-full text-[8px] font-bold tracking-wider uppercase';
-        tagline = '💀 Dark & Bold: Grown-up psychological boundaries';
-        g1.classList.add('bg-red-700/20');
-        g2.classList.add('bg-red-900/15');
-      } else if (activeCategory === 'custom') {
-        grad = 'from-[#02181e] via-[#054350] to-[#041115]';
-        titleBadge = 'px-2.5 py-0.5 bg-emerald-500/10 border border-emerald-400 text-emerald-300 rounded-full text-[8px] font-bold tracking-wider uppercase';
-        tagline = '🎛️ Customs Forge: Blended custom play board';
-        g1.classList.add('bg-emerald-500/20');
-        g2.classList.add('bg-emerald-950/10');
+        g2.classList.add('bg-rose-600/10');
+        titleHeading.className = 'text-4xl sm:text-5xl font-extrabold tracking-[-0.04em] uppercase flex items-center justify-center font-display leading-none select-none transition-all duration-700 neon-glow-fuchsia';
+        titleTruth.className = 'text-fuchsia-400 transition-all duration-700';
+        titleDare.className = 'text-pink-400 transition-all duration-700';
+      } else if (currentThemeDeck === 'dark') {
+        grad = 'from-[#080808] via-[#100103] to-[#1f0001]';
+        titleBadgeCls = 'inline-flex items-center gap-1.5 px-3 py-0.5 bg-red-950/10 border border-red-600 text-red-500 rounded-full text-[8.5px] font-black tracking-widest uppercase shadow-[0_0_12px_rgba(239,68,68,0.4)]';
+        taglineText = '💀 Dark & Bold: Intensely raw & spicy';
+        g1.classList.add('bg-red-700/15');
+        g2.classList.add('bg-red-900/10');
+        titleHeading.className = 'text-4xl sm:text-5xl font-extrabold tracking-[-0.04em] uppercase flex items-center justify-center font-display leading-none select-none transition-all duration-700 neon-glow-red';
+        titleTruth.className = 'text-red-500 transition-all duration-700';
+        titleDare.className = 'text-rose-600 transition-all duration-700';
       }
 
-      document.body.className = "w-screen h-[100dvh] flex flex-col justify-between items-center relative overflow-hidden bg-gradient-to-b " + grad + " p-3 text-slate-100 selection:bg-purple-500 selection:text-white ambient-grad";
-      document.getElementById('header-accent-badge').className = titleBadge;
-      document.getElementById('deck-tagline').innerText = tagline;
+      document.getElementById('dynamicBody').className = "w-full max-w-full h-[100dvh] min-h-[100dvh] flex flex-col justify-between items-center relative overflow-hidden bg-gradient-to-b " + grad + " p-3 text-slate-100 selection:bg-cyan-500 selection:text-white ambient-grad";
+      document.getElementById('headerBadge').className = titleBadgeCls;
     }
 
-    // RADIAL MATH AND COMPREHENSIVE SCALE RENDERING ENGINE
-    function renderRadialGuests() {
-      const ring = document.getElementById('radial-players');
-      if (!ring) return;
-      ring.innerHTML = '';
+    // 3. UPSCALED SPINNER ARENA SVG CENTRAL BOTTLE GENERATOR & NODE SPACING
+    function populateCentralBottle() {
+      let gradStart = '#06b6d4'; // friends standard
+      let gradEnd = '#10b981';
 
-      const count = currentLobbyPlayers.length;
-      if (count === 0) return;
+      if (currentThemeDeck === 'couples') {
+        gradStart = '#f43f5e';
+        gradEnd = '#ec4899';
+      } else if (currentThemeDeck === 'family') {
+        gradStart = '#f59e0b';
+        gradEnd = '#f97316';
+      } else if (currentThemeDeck === 'deep') {
+        gradStart = '#a855f7';
+        gradEnd = '#6366f1';
+      } else if (currentThemeDeck === 'extreme') {
+        gradStart = '#d946ef';
+        gradEnd = '#ec4899';
+      } else if (currentThemeDeck === 'dark') {
+        gradStart = '#ef4444';
+        gradEnd = '#991b1b';
+      }
 
-      const containerWidth = ring.clientWidth || 280;
-      const radius = (containerWidth / 2) - 30; // Radius offset to ensure players stay inside the bounds
-      const centerX = containerWidth / 2;
-      const centerY = containerWidth / 2;
+      const bottleContainer = document.getElementById('bottle');
+      // Scaled up visual vector bottle
+      bottleContainer.innerHTML = `
+        <svg viewBox="0 0 100 300" class="w-full h-full drop-shadow-[0_0_15px_rgba(0,0,0,0.85)]" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="radialFluidGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="${gradStart}" />
+              <stop offset="60%" stop-color="${gradStart}ee" />
+              <stop offset="100%" stop-color="${gradEnd}" />
+            </linearGradient>
+            <linearGradient id="glassReflection" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.5"/>
+              <stop offset="30%" stop-color="#ffffff" stop-opacity="0.1"/>
+              <stop offset="90%" stop-color="#ffffff" stop-opacity="0.0"/>
+            </linearGradient>
+          </defs>
+          
+          <!-- Outer Glass Outline Shadow -->
+          <path d="M 40,30 L 60,30 L 60,70 L 80,100 L 80,260 C 80,285 20,285 20,260 L 20,100 L 40,70 Z" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+          
+          <!-- Liquid Content dynamic fluid level -->
+          <path d="M 22,110 L 78,110 L 78,255 C 78,275 22,275 22,255 Z" fill="url(#radialFluidGrad)"/>
+          
+          <!-- Elegant Highlight Shine Glass Strip -->
+          <path d="M 23,100 L 32,100 L 32,258 C 32,270 23,270 23,258 Z" fill="url(#glassReflection)"/>
+          
+          <!-- Cap Design -->
+          <rect x="36" y="15" width="28" height="15" rx="3" fill="#ffffff" opacity="0.9" />
+          
+          <!-- Central Dynamic Spinning Pointer Indicator -->
+          <polygon points="50,15 35,45 65,45" fill="${gradStart}"/>
+        </svg>
+      `;
+    }
 
-      currentLobbyPlayers.forEach((p, idx) => {
-        // Calculate coordinate degrees starting from exactly top (substract Math.PI/2)
-        const angle = (idx * 2 * Math.PI / count) - (Math.PI / 2);
-        const x = centerX + radius * Math.cos(angle);
-        const y = centerY + radius * Math.sin(angle);
+    // ARENA DISPLAY PREPARATION
+    function goToArenaLayout() {
+      if (players.length < 2) return;
+      playSlide();
+
+      document.getElementById('screen-lobby').classList.add('hidden');
+      document.getElementById('screen-arena').classList.remove('hidden');
+
+      renderArenaPlayerNodes();
+    }
+
+    function returnToLobbyConfig() {
+      playSlide();
+      document.getElementById('screen-arena').classList.add('hidden');
+      document.getElementById('screen-lobby').classList.remove('hidden');
+    }
+
+    // Positioning client nodes radially around the track
+    function renderArenaPlayerNodes() {
+      const container = document.getElementById('arena-players-wrapper');
+      container.innerHTML = '';
+
+      const count = players.length;
+      const radiusPercentage = 41; // Radiating player anchors on outer periphery
+
+      players.forEach((p, i) => {
+        const phi = (i * 2 * Math.PI) / count - Math.PI / 2; // Offset to coordinate with top layout
+        const pctX = 50 + radiusPercentage * Math.cos(phi);
+        const pctY = 50 + radiusPercentage * Math.sin(phi);
 
         const node = document.createElement('div');
-        node.id = 'radial-player-node-' + idx;
-        node.style.position = 'absolute';
-        node.style.left = x + 'px';
-        node.style.top = y + 'px';
-        node.style.transform = 'translate(-50%, -50%)';
-        node.style.transition = 'all 0.5s ease-out';
-        
-        node.className = 'radial-node z-20 flex flex-col items-center gap-1 bg-black/70 border border-white/10 rounded-2xl p-1.5 w-[65px] h-[65px] justify-center text-center shadow-lg';
+        node.id = `player-node-${i}`;
+        node.className = "absolute flex flex-col items-center justify-center transition-all duration-300 z-30 pointer-events-none";
+        node.style.left = `${pctX}%`;
+        node.style.top = `${pctY}%`;
+        node.style.transform = `translate(-50%, -50%)`;
+
+        // Create individual visually rich circle for the avatar
         node.innerHTML = `
-          <span class="text-lg leading-none">${p.emoji}</span>
-          <span class="text-[8px] font-extrabold truncate max-w-[55px] text-white uppercase">${p.name}</span>
-          <span class="text-[7px] text-slate-400 font-mono tracking-tighter leading-none">${p.score} pts</span>
+          <div class="relative flex items-center justify-center w-12 h-12 rounded-full border-2 border-slate-600 bg-slate-900/90 shadow-lg transition-transform duration-300">
+            <span class="text-xl select-none">${p.emoji}</span>
+            <span class="absolute -bottom-1 -right-1 text-[8px] font-mono font-bold px-1.5 py-0.2 rounded-full text-emerald-300 bg-emerald-950/80 border border-emerald-500/30">
+              ${p.score}
+            </span>
+          </div>
+          <span class="text-[9.5px] font-black text-slate-300 bg-black/60 px-2 py-0.5 rounded-full border border-white/5 mt-1 max-w-[72px] truncate">
+            ${p.name}
+          </span>
         `;
-        ring.appendChild(node);
+        container.appendChild(node);
       });
     }
 
-    // VELOCITY PHYSICS SPIN MACHINE WITH SFX OVER TIME
-    function spinBottle() {
-      if (isSpinningActive || currentLobbyPlayers.length < 2) return;
-      isSpinningActive = true;
-      playTriggerSpin();
+    // 3. SPIN MOTOR & BOTTLE WHEEL WHIRR PITCH DECAY SYNCHRONIZER
+    function spinActiveWheel() {
+      if (isCurrentlySpinning || players.length < 2) return;
+      isCurrentlySpinning = true;
+      playClick();
 
+      // Disable interactions
       const spinBtn = document.getElementById('spin-btn');
       spinBtn.disabled = true;
+      spinBtn.classList.add('opacity-40');
 
-      // Reset all node highlights/animation layers from former trials
-      document.querySelectorAll('.radial-node').forEach(node => {
-        node.className = 'radial-node z-20 flex flex-col items-center gap-1 bg-black/70 border border-white/10 rounded-2xl p-1.5 w-[65px] h-[65px] justify-center text-center shadow-lg';
+      // Refresh dynamic queue just in case
+      initQueuesIfDepleted();
+
+      // Clear any past target node highlighting
+      players.forEach((_, idx) => {
+        const past = document.getElementById(`player-node-${idx}`);
+        if(past) {
+          const innerCircle = past.querySelector('.relative');
+          innerCircle.className = "relative flex items-center justify-center w-12 h-12 rounded-full border-2 border-slate-600 bg-slate-900/90 shadow-lg transition-transform duration-300";
+        }
       });
 
-      // Randomized speed factors of rotation over 4.5 seconds
-      const minSpinRotations = 5; 
-      const maxSpinRotations = 9; 
-      const count = currentLobbyPlayers.length;
-
-      // Calculate perfect targeted player segment
-      const targetIndex = Math.floor(Math.random() * count);
-      selectedPlayerIndex = targetIndex;
-
-      // Base formula: calculate rotational degree offset for target Index
-      const segmentArc = 360 / count;
-      const targetAngle = (targetIndex * segmentArc);
-
-      // Final rotational angle with fully random revolutions
-      const extraLoops = minSpinRotations + Math.floor(Math.random() * (maxSpinRotations - minSpinRotations));
-      const finalAngle = (extraLoops * 360) + targetAngle;
-
-      // Spin physics simulation ticks for clink sounds
-      const totalSteps = 65;
-      const duration = 4500;
-      let step = 0;
-
-      const triggerLinearTicks = () => {
-        if (step >= totalSteps) return;
-        step++;
-        playClink();
-
-        // Ease timing mapping (easeOutCubic pattern for tick timings)
-        const progress = step / totalSteps;
-        const nextTickDelay = Math.pow(progress, 2.5) * 450;
-        setTimeout(triggerLinearTicks, Math.max(25, nextTickDelay));
-      };
+      const randomTurns = 5 + Math.random() * 5; // Rotation factor
+      const spinGoalDegrees = randomTurns * 360 + Math.random() * 360;
+      const baseRotation = currentBottleDegree;
+      const targetRotationTotal = baseRotation + spinGoalDegrees;
       
-      // Start sounds
-      triggerLinearTicks();
+      const duration = 2800 + Math.random() * 800; // Duration of spinning
+      const startTime = performance.now();
 
-      const bottle = document.getElementById('bottle');
-      bottle.style.transform = `rotate(${finalAngle}deg)`;
+      // Realtime whirr sound parameters: track speed decays
+      let lastTickDegree = 0;
+      const tickStep = 360 / players.length; // Tick on every player intersection boundary
+
+      function performFrame(now) {
+        const progress = Math.min(1, (now - startTime) / duration);
+        
+        // Easing function: Cubic Out for realistic spinning deceleration
+        const easeVal = 1 - Math.pow(1 - progress, 3);
+        const currentRot = baseRotation + (spinGoalDegrees * easeVal);
+        
+        const bottleRef = document.getElementById('bottle');
+        bottleRef.style.transform = `rotate(${currentRot}deg)`;
+
+        // 5. Sound synchronization whirr decay
+        const degreeDelta = currentRot - lastTickDegree;
+        if (Math.abs(degreeDelta) >= tickStep) {
+          const speedPercentage = 1 - progress; // Linear velocity estimation
+          playTickSound(speedPercentage);
+          lastTickDegree = currentRot;
+        }
+
+        if (progress < 1) {
+          requestAnimationFrame(performFrame);
+        } else {
+          // Wrap angular degrees to 360 range
+          currentBottleDegree = targetRotationTotal % 360;
+          
+          // Determine targeted player
+          // The bottle pointing index is at top (0 degrees).
+          const singleSec = 360 / players.length;
+          // Compensate rotation so pointing matches correctly
+          const pointingAngle = (360 - (currentBottleDegree % 360)) % 360;
+          selectedVictimIndex = Math.floor(((pointingAngle + (singleSec / 2)) % 360) / singleSec);
+          if (selectedVictimIndex >= players.length) selectedVictimIndex = 0;
+
+          triggerVictimLanding();
+        }
+      }
+
+      requestAnimationFrame(performFrame);
+    }
+
+    // TARGET LANDING DESIGN CELEBRATION
+    function triggerVictimLanding() {
+      playDing();
+      
+      const node = document.getElementById(`player-node-${selectedVictimIndex}`);
+      if (node) {
+        const circle = node.querySelector('.relative');
+        circle.className = "relative flex items-center justify-center w-12 h-12 rounded-full border-2 border-cyan-400 bg-cyan-950 text-white shadow-xl scale-110 animate-target-land";
+      }
+
+      // Briefly display target outcome decision screen after delay
+      setTimeout(() => {
+        document.getElementById('screen-arena').classList.add('hidden');
+        document.getElementById('screen-destiny').classList.remove('hidden');
+        
+        const targetGuest = players[selectedVictimIndex];
+        document.getElementById('victim-title').innerText = `${targetGuest.emoji} ${targetGuest.name}'s Choice!`;
+        
+        // Reset spin button values
+        const spinBtn = document.getElementById('spin-btn');
+        spinBtn.disabled = false;
+        spinBtn.classList.remove('opacity-40');
+        isCurrentlySpinning = false;
+      }, 900);
+    }
+
+    function dismissToArenaWheel() {
+      playSlide();
+      document.getElementById('screen-destiny').classList.add('hidden');
+      document.getElementById('screen-arena').classList.remove('remove');
+      document.getElementById('screen-arena').classList.add('flex');
+      goToArenaLayout();
+    }
+
+    // 4. DUPLICATE PROTECTION: ENSURE NON-REPETITIVE QUESTION PULLS
+    function initQueuesIfDepleted() {
+      const cats = ['friends', 'couples', 'family', 'deep', 'extreme', 'dark'];
+      cats.forEach(c => {
+        if (!runtimeQueues[c]) {
+          runtimeQueues[c] = { truths: [], dares: [] };
+        }
+        if (!runtimeQueues[c].truths || runtimeQueues[c].truths.length === 0) {
+          runtimeQueues[c].truths = [...MASTER_QUESTION_DATABASE[c].truths];
+        }
+        if (!runtimeQueues[c].dares || runtimeQueues[c].dares.length === 0) {
+          runtimeQueues[c].dares = [...MASTER_QUESTION_DATABASE[c].dares];
+        }
+      });
+    }
+
+    function pullUnplayedPrompt(deck, type) {
+      initQueuesIfDepleted();
+      
+      const targetArr = runtimeQueues[deck][type === 'truth' ? 'truths' : 'dares'];
+      
+      // If array gets exhausted inside game, reload immediately
+      if (targetArr.length === 0) {
+        runtimeQueues[deck][type === 'truth' ? 'truths' : 'dares'] = [...MASTER_QUESTION_DATABASE[deck][type === 'truth' ? 'truths' : 'dares']];
+      }
+
+      // Random splice selection to ensure absolute uniqueness
+      const index = Math.floor(Math.random() * targetArr.length);
+      const selected = targetArr.splice(index, 1)[0];
+      return selected;
+    }
+
+    // DESTINY DECISION INITIATOR
+    function launchTargetChallenge(type) {
+      selectedPromptType = type;
+      playSlide();
+
+      // Update challenge layouts
+      document.getElementById('screen-destiny').classList.add('hidden');
+      document.getElementById('screen-challenge').classList.remove('hidden');
+
+      const targetGuest = players[selectedVictimIndex];
+      document.getElementById('label-active-guest').innerText = `${targetGuest.emoji} ${targetGuest.name}`;
+
+      const pill = document.getElementById('challengePillType');
+      if (type === 'truth') {
+        pill.innerText = "TRUTH";
+        pill.className = "text-[8.5px] font-black tracking-widest px-2.5 py-0.5 rounded-full border bg-cyan-500/10 border-cyan-400 text-cyan-300 shadow-[0_0_8px_rgba(6,182,212,0.15)]";
+      } else {
+        pill.innerText = "DARE";
+        pill.className = "text-[8.5px] font-black tracking-widest px-2.5 py-0.5 rounded-full border bg-rose-500/10 border-rose-400 text-rose-300 shadow-[0_0_8px_rgba(244,63,94,0.15)]";
+      }
+
+      // Update category tag
+      document.getElementById('challengeCategoryBadge').innerText = currentThemeDeck.toUpperCase();
+
+      // Retrieve non-repetitive prompt card
+      const promptText = pullUnplayedPrompt(currentThemeDeck, type);
+      document.getElementById('challengeTextPrompt').innerText = promptText;
+    }
+
+    // 4. FUNCTIONAL RUNTIME SKIP CARD TRACKER
+    function skipActivePrompt() {
+      playSlide();
+      
+      const promptText = pullUnplayedPrompt(currentThemeDeck, selectedPromptType);
+      
+      const promptEl = document.getElementById('challengeTextPrompt');
+      promptEl.style.opacity = '0.1';
+      
+      setTimeout(() => {
+        promptEl.innerText = promptText;
+        promptEl.style.opacity = '1';
+      }, 150);
+    }
+
+    // 6. HARDWARE-ACCELERATED INSTANT ROUTING: Pop effect followed by seamless Arena view. Zero lag!
+    function triggerCompletedRoute() {
+      playSuccessChord();
+
+      // Incremental point update
+      if (players[selectedVictimIndex]) {
+        players[selectedVictimIndex].score += 15; // Complete points
+      }
+
+      const completedBtn = document.getElementById('completed-btn');
+      // Visual instant scale pop feedback
+      completedBtn.classList.add('animate-pop-scale');
 
       setTimeout(() => {
-        isSpinningActive = false;
-        spinBtn.disabled = false;
-
-        // Highlight selected radial target with celebration animation
-        const node = document.getElementById('radial-player-node-' + targetIndex);
-        if (node) {
-          node.className = 'radial-node z-25 flex flex-col items-center gap-1 bg-gradient-to-b from-cyan-500/20 to-teal-500/20 border-2 border-emerald-400 rounded-2xl p-1.5 w-[65px] h-[65px] justify-center text-center shadow-[0_0_15px_rgba(52,211,153,0.5)] animate-target';
-        }
+        completedBtn.classList.remove('animate-pop-scale');
         
-        playSelectPlayerSFX();
-
-        // Delay 1 second, then route directly to decision screen
-        setTimeout(() => {
-          document.getElementById('turn-name').innerText = currentLobbyPlayers[targetIndex].name + "'s Choice!";
-          navigate('choice');
-        }, 1100);
-
-      }, duration);
+        // Immediate screen routing swap
+        document.getElementById('screen-challenge').classList.add('hidden');
+        document.getElementById('screen-arena').classList.remove('hidden');
+        
+        renderArenaPlayerNodes();
+      }, 150);
     }
 
-    // CHOOSE FATE SCREEN
-    function chooseFate(type) {
-      activeStageChoice = type;
-      beep(880, 0.1, 'sine');
-
-      document.getElementById('player-label').innerText = currentLobbyPlayers[selectedPlayerIndex].name;
-      document.getElementById('challenge-type').className = 'text-[9px] font-black tracking-widest border px-2 rounded ' + (type==='truth'?'border-cyan-400 bg-cyan-500/10 text-cyan-300':'border-rose-450 bg-rose-500/10 text-rose-300');
-      document.getElementById('challenge-type').innerText = type.toUpperCase();
-
-      // Retrieve prompt
-      let promptText = "No cards found in current deck choice matrix.";
-      
-      if (activeCategory === 'custom') {
-        const matchingCustoms = customDatabase.filter(q => q.type === type);
-        // Fallback to blend configs
-        if (matchingCustoms.length === 0 || Math.random() < 0.35) {
-          const blendSource = blendList[Math.floor(Math.random() * blendList.length)] || 'friends';
-          const list = DATABASE_MAP[blendSource] ? DATABASE_MAP[blendSource][type+'s'] : [];
-          promptText = list[Math.floor(Math.random() * list.length)] || "Try drawing another card.";
-        } else {
-          promptText = matchingCustoms[Math.floor(Math.random() * matchingCustoms.length)].text;
-        }
-      } else {
-        const pool = DATABASE_MAP[activeCategory] ? DATABASE_MAP[activeCategory][type+'s'] : [];
-        if (pool && pool.length > 0) {
-          promptText = pool[Math.floor(Math.random() * pool.length)];
-        }
-      }
-
-      document.getElementById('challenge-text').innerText = promptText;
-      navigate('challenge');
+    function retreatToArenaWheel() {
+      playSlide();
+      document.getElementById('screen-challenge').classList.add('hidden');
+      document.getElementById('screen-arena').classList.remove('hidden');
+      renderArenaPlayerNodes();
     }
-
-    function skipPrompt() {
-      playBtnClick();
-      chooseFate(activeStageChoice);
-    }
-
-    function endChallenge(success) {
-      if (success) {
-        currentLobbyPlayers[selectedPlayerIndex].score += 10;
-        playFanfare();
-      } else {
-        playFail();
-      }
-      navigate('arena');
-      renderRadialGuests();
-    }
-
-    // SHARE MANAGEMENT MODAL WITH COMPACT REALTIME QR DISPATCHER
-    function toggleShare(isOpen) {
-      if (isOpen) playModalOpenSFX();
-      else playBackBtnSFX();
-      
-      const modal = document.getElementById('share-modal');
-      modal.className = isOpen ? 'fixed inset-0 bg-black/90 backdrop-blur-xl z-50 flex items-center justify-center p-3' : 'hidden';
-      
-      if (isOpen) {
-        const pageUrl = window.location.href;
-        try {
-          // Compact QRCode drawer execution
-          const qr = qrcode(4, 'M');
-          qr.addData(pageUrl);
-          qr.make();
-          const canvas = document.getElementById('qr-canvas');
-          const ctx = canvas.getContext('2d');
-          
-          const size = canvas.width = canvas.height = 128;
-          ctx.fillStyle = '#020408';
-          ctx.fillRect(0, 0, size, size);
-
-          const moduleCount = qr.getModuleCount();
-          const tileW = size / moduleCount;
-          const tileH = size / moduleCount;
-
-          ctx.fillStyle = '#10b981'; // Emerald QR elements
-          for (let row = 0; row < moduleCount; row++) {
-            for (let col = 0; col < moduleCount; col++) {
-              if (qr.isDark(row, col)) {
-                ctx.fillRect(Math.round(col * tileW), Math.round(row * tileH), Math.ceil(tileW), Math.ceil(tileH));
-              }
-            }
-          }
-        } catch(err) {
-          console.error("QR drawing error: ", err);
-        }
-      }
-    }
-
-    function dispatchWhatsApp() {
-      beep(1000, 0.05);
-      const hostUrl = window.location.href;
-      const text = encodeURIComponent("Hey! Join my live party lobby on Truth or Dare for custom games: " + hostUrl);
-      window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
-    }
-
-    function copyLobby() {
-      beep(1200, 0.05);
-      const url = window.location.href;
-      navigator.clipboard.writeText(url).then(() => {
-        const btn = document.getElementById('btn-copy');
-        btn.innerText = "COPIED! ✓";
-        setTimeout(() => btn.innerText = "Copy Link", 1500);
-      });
-    }
-
-    // SELF EXECUTE INIT ON PAGE LAUNCH
-    initApp();
   </script>
 </body>
-</html>  
+</html>
